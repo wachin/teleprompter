@@ -7,8 +7,9 @@ Un teleprompter de escritorio para presentaciones y grabaciones. Diseñado para 
 ## 📦 Requisitos
 
 - Python 3.10+
-- tkinter (incluido con Python estándar)
+- PyQt6 (se instala automáticamente con pip)
 - Linux (Debian 13 / MX Linux recomendado)
+- Misma red WiFi (para control remoto desde el teléfono)
 
 ---
 
@@ -23,7 +24,10 @@ cd teleprompter
 python3 -m venv venv
 source venv/bin/activate
 
-# 3. Ejecutar
+# 3. Instalar dependencias
+pip install -r requirements.txt
+
+# 4. Ejecutar
 python3 main.py
 ```
 
@@ -71,46 +75,68 @@ Una vez abierto el teleprompter, usa el teclado:
 
 | Tecla | Acción | Descripción |
 |-------|--------|-------------|
-| `Espacio` | ▶ / ⏸ | Inicia o pausa el scroll |
-| `↑` | 🔼 | Aumenta la velocidad de scroll |
-| `↓` | 🔽 | Disminuye la velocidad de scroll |
-| `Home` / `R` | 🔄 | Vuelve al inicio del texto (para repetir toma) |
-| `+` | 🔤 | Aumenta el tamaño de la letra |
-| `-` | 🔤 | Disminuye el tamaño de la letra |
+| `Espacio` | ▶ / ⏸ | Inicia con cuenta regresiva 3-2-1, o pausa |
+| `↑` | 🔼 | Aumenta la velocidad (+1) |
+| `↓` | 🔽 | Disminuye la velocidad (-1) |
+| `Ctrl + ↑/↓` | ⚡ | Cambio rápido de velocidad (±5) |
+| `Shift + ↑/↓` | ⚡⚡ | Cambio muy rápido (±10) |
+| `Home` / `R` | 🔄 | Vuelve al inicio del texto |
+| `+` / `-` | 🔤 | Aumenta/disminuye tamaño de letra |
 | `F` | 🖥️ | Alterna pantalla completa / ventana |
-| `Escape` | ❌ | Cierra la app (guarda tu configuración) |
+| `O` | 📄 | Abrir selector de guion |
+| `G` | 📏 | Mostrar/ocultar línea guía |
+| `Q` | 📱 | Mostrar código QR para control remoto |
+| `Escape` | ❌ | Cierra la app (guarda configuración) |
 
-### 4. Flujo de trabajo para grabar un video
+### 4. Control remoto desde el teléfono 📱
+
+**¡Novedad!** Puedes controlar el teleprompter desde tu teléfono sin tocar la computadora.
+
+**Pasos:**
+1. Asegúrate de que la computadora y el teléfono estén en la **misma red WiFi**
+2. Presiona `Q` en la computadora para ver el código QR
+3. Escanea el código QR con la cámara del teléfono
+4. Se abrirá la página de control remoto en el navegador del teléfono
+
+**Funciones del control remoto:**
+- ▶ **Play/Pausa** con cuenta regresiva
+- 🔼 **Velocidad +/-** con botones grandes
+- 🔄 **Reiniciar** para volver al inicio
+- 📊 **Barra de progreso** en tiempo real
+- 👆 **Control táctil** (deslizar arriba/abajo para cambiar velocidad)
+
+### 5. Flujo de trabajo para grabar un video
 
 ```
-┌─────────────────────────────────────────────────┐
-│  1. Prepara tu guion en scripts/guion.txt       │
-│  2. Posiciona tu laptop frente a ti             │
-│  3. Ejecuta: python3 main.py scripts/guion.txt  │
-│  4. Ajusta tamaño de letra con +/-              │
-│  5. Presiona Home para posicionar al inicio     │
-│  6. Prepara tu teléfono para grabar             │
-│  7. Dale play a la grabación en el teléfono     │
-│  8. Presiona ESPACIO para iniciar el scroll     │
-│  9. Lee mirando la pantalla de la laptop        │
-│ 10. Al terminar, presiona ESPACIO para pausar   │
-│ 11. Presiona Home para volver al inicio         │
-│ 12. Repite si necesitas otra toma                │
-└─────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────┐
+│  1. Prepara tu guion en scripts/guion.txt               │
+│  2. Posiciona tu laptop frente a ti                     │
+│  3. Ejecuta: python3 main.py scripts/guion.txt          │
+│  4. Ajusta tamaño de letra con +/-                      │
+│  5. Presiona Home para posicionar al inicio             │
+│  6. Presiona Q y escanea el QR con tu teléfono          │
+│  7. Prepara tu teléfono para grabar                     │
+│  8. Dale play a la grabación en el teléfono             │
+│  9. Desde el teléfono, presiona Play para iniciar       │
+│ 10. Lee mirando la pantalla de la laptop                │
+│ 11. Al terminar, presiona Pausar desde el teléfono      │
+│ 12. Repite si necesitas otra toma                        │
+└─────────────────────────────────────────────────────────┘
 ```
 
-### 5. Ajustar la velocidad
+### 6. Ajustar la velocidad
 
 La velocidad inicial es 3. Para encontrar tu ritmo ideal:
 
-1. Presiona `Espacio` para iniciar
+1. Presiona `Espacio` para iniciar (hay cuenta regresiva 3-2-1)
 2. Si el texto va **muy rápido**, presiona `↓`
 3. Si el texto va **muy lento**, presiona `↑`
-4. Repite hasta que el scroll coincida con tu velocidad de lectura
+4. Para cambios grandes, usa `Ctrl + ↑/↓` (±5) o `Shift + ↑/↓` (±10)
+5. También puedes usar la **rueda del mouse** o **deslizar** en el teléfono
 
 **Tip:** La mayoría de personas leen entre 130-160 palabras por minuto. Si tu discurso tiene 386 palabras (como el ejemplo) y quieres que dure 3 minutos, necesitas ~129 WPM.
 
-### 6. Modificar la configuración
+### 7. Modificar la configuración
 
 Las preferencias se guardan automáticamente en `config.json` al cerrar la app.
 
@@ -192,8 +218,11 @@ Para textos más estrechos (si tiendes a escanear los ojos de lado a lado):
 ```
 teleprompter/
 ├── main.py              # Punto de entrada
-├── ui.py                # Clase Teleprompter (interfaz)
+├── ui.py                # Clase Teleprompter (interfaz PyQt6)
 ├── config.py            # Carga/guardado de configuración
+├── remote_server.py     # Servidor Flask para control remoto
+├── templates/
+│   └── remote.html      # Página de control remoto
 ├── config.json          # Preferencias del usuario (generado)
 ├── scripts/
 │   └── guion_actual.txt # Guion por defecto
@@ -219,13 +248,29 @@ Sí. Presiona `+` o `-` en cualquier momento, incluso con el scroll activo.
 El scroll se mueve 1 píxel cada ciclo. Aumentar la velocidad reduce el intervalo entre movimientos, no la distancia.
 
 **¿Funciona en Wayland?**
-El modo `-fullscreen` de tkinter puede comportarse diferente. Si tienes problemas, presiona `F` para alternar a modo ventana.
+El teleprompter usa PyQt6 que tiene mejor soporte que tkinter. Si tienes problemas, presiona `F` para alternar a modo ventana.
+
+**¿Cómo funciona el control remoto?**
+El teleprompter levanta un servidor local (Flask) en el puerto 5000. Al escanear el QR, se abre una página web que se comunica por WebSocket con el teleprompter. Todo es local, no requiere internet.
+
+**¿Es seguro el control remoto?**
+El servidor solo está disponible en tu red local. No se expone a internet y se cierra al cerrar el teleprompter.
 
 ---
 
 ## 🗺️ Roadmap
 
-Ver [ROADMAP.md](ROADMAP.md) para las mejoras planificadas (control remoto, sincronización por voz, etc.).
+Ver [ROADMAP.md](ROADMAP.md) para las mejoras planificadas.
+
+**Fases completadas:**
+- ✅ Fase 0: Refactor base y modularización
+- ✅ Fase 1: Cuenta regresiva, progreso, selector de guion, línea guía
+- ✅ Fase 2: Control remoto desde el teléfono con Flask y QR
+
+**Próximas fases:**
+- 🔄 Fase 3: Sincronización inteligente con la voz
+- 🔄 Fase 4: Empaquetado y distribución
+- 🔄 Fase 5: Pulido y pruebas
 
 ---
 

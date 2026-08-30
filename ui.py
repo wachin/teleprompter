@@ -5,12 +5,15 @@ Fase 1: Cuenta regresiva, progreso, selector de guion, línea guía.
 
 from PyQt6.QtWidgets import (
     QMainWindow, QTextEdit, QVBoxLayout, QWidget, QLabel,
-    QHBoxLayout, QFrame, QProgressBar, QFileDialog
+    QHBoxLayout, QFrame, QProgressBar, QFileDialog, QDialog,
+    QVBoxLayout as DialogLayout, QPushButton
 )
-from PyQt6.QtCore import Qt, QTimer, QUrl
-from PyQt6.QtGui import QFont, QColor, QTextCursor, QKeySequence, QShortcut
+from PyQt6.QtCore import Qt, QTimer, QUrl, QSize
+from PyQt6.QtGui import QFont, QColor, QTextCursor, QKeySequence, QShortcut, QPixmap, QImage
 from config import save_config
 import os
+import qrcode
+from io import BytesIO
 
 
 class Teleprompter(QMainWindow):
@@ -200,6 +203,10 @@ class Teleprompter(QMainWindow):
         if self.is_mirror:
             self._apply_mirror()
 
+        # Servidor remoto
+        self.remote_server = None
+        self._setup_remote_server()
+
     def _separator(self):
         """Crea un separador vertical."""
         sep = QFrame()
@@ -380,6 +387,90 @@ class Teleprompter(QMainWindow):
             self.progress_bar.setValue(0)
             self.time_label.setText("⏱ --:--")
 
+    # ── Servidor remoto ───────────────────────────────────────
+
+    def _setup_remote_server(self):
+        """Configura e inicia el servidor remoto."""
+        try:
+            from remote_server import RemoteServer
+            self.remote_server = RemoteServer(self, port=5000)
+            self.remote_server.start()
+            print(f"[Remote] Control remoto disponible en: {self.remote_server.url}")
+        except Exception as e:
+            print(f"[Remote] Error al iniciar servidor: {e}")
+
+    def show_qr_code(self):
+        """Muestra el código QR para conectarse al control remoto."""
+        if not self.remote_server:
+            return
+
+        dialog = QDialog(self)
+        dialog.setWindowTitle("Control Remoto")
+        dialog.setMinimumSize(350, 450)
+        dialog.setStyleSheet("background-color: #1a1a2e;")
+
+        layout = DialogLayout(dialog)
+        layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        # Título
+        title = QLabel("📱 Conecta tu teléfono")
+        title.setStyleSheet("color: #FFD700; font-size: 18px; font-weight: bold; background: transparent;")
+        title.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(title)
+
+        # QR Code
+        qr_label = QLabel()
+        qr_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        # Generar QR
+        qr = qrcode.QRCode(version=1, box_size=10, border=5)
+        qr.add_data(self.remote_server.url)
+        qr.make(fit=True)
+        img = qr.make_image(fill_color="black", back_color="white")
+
+        # Convertir a QPixmap
+        buffer = BytesIO()
+        img.save(buffer, format="PNG")
+        buffer.seek(0)
+        pixmap = QPixmap()
+        pixmap.loadFromData(buffer.read())
+        qr_label.setPixmap(pixmap.scaled(250, 250, Qt.AspectRatioMode.KeepAspectRatio))
+        layout.addWidget(qr_label)
+
+        # URL
+        url_label = QLabel(self.remote_server.url)
+        url_label.setStyleSheet("color: #888; font-size: 12px; background: transparent;")
+        url_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(url_label)
+
+        # Instrucciones
+        instructions = QLabel("1. Conéctate a la misma red WiFi\n2. Abre la cámara del teléfono\n3. Escanea el código QR")
+        instructions.setStyleSheet("color: #aaa; font-size: 14px; background: transparent; margin-top: 10px;")
+        instructions.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(instructions)
+
+        # Botón cerrar
+        close_btn = QPushButton("Cerrar")
+        close_btn.setStyleSheet("""
+            QPushButton {
+                background-color: #FFD700;
+                color: black;
+                border: none;
+                border-radius: 10px;
+                padding: 12px 30px;
+                font-size: 14px;
+                font-weight: bold;
+                margin-top: 15px;
+            }
+            QPushButton:hover {
+                background-color: #FFC107;
+            }
+        """)
+        close_btn.clicked.connect(dialog.close)
+        layout.addWidget(close_btn, alignment=Qt.AlignmentFlag.AlignCenter)
+
+        dialog.exec()
+
     # ── Métodos internos ───────────────────────────────────────
 
     def _update_font(self):
@@ -445,6 +536,8 @@ class Teleprompter(QMainWindow):
             self.open_script()
         elif key == Qt.Key.Key_G:
             self.toggle_guide_line()
+        elif key == Qt.Key.Key_Q:
+            self.show_qr_code()
         elif key == Qt.Key.Key_Escape:
             self.close()
         else:
