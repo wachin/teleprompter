@@ -13,7 +13,7 @@
 | Fase 0 — Preparar el terreno | ✅ Completada | 2026-08-30 |
 | Fase 1 — Controles y UX | ✅ Completada | 2026-08-30 |
 | Fase 2 — Control remoto | ✅ Completada | 2026-08-30 |
-| Fase 3 — Sincronización con voz | 🔄 Pendiente | — |
+| Fase 3 — Sincronización con voz | ✅ Completada | 2026-08-30 |
 | Fase 4 — Empaquetado | 🔄 Pendiente | — |
 | Fase 5 — Pulido y pruebas | 🔄 Pendiente | — |
 
@@ -54,14 +54,21 @@
 
 ---
 
-## Fase 3 — Sincronización inteligente con la voz 🔄
+## Fase 3 — Sincronización inteligente con la voz ✅
 
-- [ ] Integrar reconocimiento de voz local (Vosk o `faster-whisper`)
-- [ ] Ajustar automáticamente la velocidad de scroll al ritmo del orador
-- [ ] **Modo práctica/ensayo**: sugerir velocidad óptima para tiempo objetivo
-- [ ] Resaltar en rojo si va lento, en verde si va bien
+- [x] Integrar reconocimiento de voz local con Vosk
+- [x] Ajuste automático de velocidad según WPM del orador
+- [x] Indicadores visuales de sincronización (verde/gris/rojo)
+- [x] Tecla `V` para activar/desactivar sincronización
+- [x] Callbacks para actualización de WPM en tiempo real
+- [x] Integración con el sistema de scroll existente
 
-**Por qué es la siguiente:** una vez que el control remoto funciona, la sincronización por voz es la mejora más ambiciosa y diferenciadora.
+**Requisito adicional:** Descargar modelo de Vosk para español (~40MB):
+```bash
+wget https://alphacephei.com/vosk/models/vosk-model-es-0.42.zip
+unzip vosk-model-es-0.42.zip
+mv vosk-model-es-0.42 model-es
+```
 
 ---
 
@@ -91,12 +98,15 @@ teleprompter/
 ├── ui.py                # Clase Teleprompter (PyQt6)
 ├── config.py            # Configuración persistente
 ├── remote_server.py     # Servidor Flask para control remoto
+├── speech_sync.py       # Sincronización de voz con Vosk
 ├── templates/
 │   └── remote.html      # Página de control remoto
+├── model-es/            # Modelo de Vosk (descargado)
 ├── config.json          # Preferencias del usuario (generado)
 ├── scripts/
 │   └── guion_actual.txt # Guion por defecto
 ├── requirements.txt
+├── .gitignore
 ├── ROADMAP.md           # Este archivo
 └── README.md
 ```
@@ -117,4 +127,5 @@ teleprompter/
 | `O` | Abrir selector de guion |
 | `G` | Mostrar/ocultar línea guía |
 | `Q` | Mostrar código QR |
+| `V` | Activar/desactivar sincronización de voz |
 | `Escape` | Salir (guarda config) |

@@ -7,9 +7,10 @@ Un teleprompter de escritorio para presentaciones y grabaciones. Diseñado para 
 ## 📦 Requisitos
 
 - Python 3.10+
-- PyQt6 (se instala automáticamente con pip)
+- PyQt6 (se instala con pip)
 - Linux (Debian 13 / MX Linux recomendado)
 - Misma red WiFi (para control remoto desde el teléfono)
+- Micrófono (para sincronización por voz, opcional)
 
 ---
 
@@ -29,6 +30,16 @@ pip install -r requirements.txt
 
 # 4. Ejecutar
 python3 main.py
+```
+
+### Instalar modelo de voz (opcional)
+
+Para usar la sincronización por voz, descarga el modelo de español:
+
+```bash
+wget https://alphacephei.com/vosk/models/vosk-model-es-0.42.zip
+unzip vosk-model-es-0.42.zip
+mv vosk-model-es-0.42 model-es
 ```
 
 ---
@@ -64,14 +75,7 @@ python3 main.py
 python3 main.py scripts/discurso_mision.txt
 ```
 
-**Cargar desde cualquier ruta:**
-```bash
-python3 main.py /home/usuario/documentos/mi_discurso.txt
-```
-
 ### 3. Controlar la reproducción
-
-Una vez abierto el teleprompter, usa el teclado:
 
 | Tecla | Acción | Descripción |
 |-------|--------|-------------|
@@ -86,11 +90,12 @@ Una vez abierto el teleprompter, usa el teclado:
 | `O` | 📄 | Abrir selector de guion |
 | `G` | 📏 | Mostrar/ocultar línea guía |
 | `Q` | 📱 | Mostrar código QR para control remoto |
+| `V` | 🎤 | Activar/desactivar sincronización de voz |
 | `Escape` | ❌ | Cierra la app (guarda configuración) |
 
 ### 4. Control remoto desde el teléfono 📱
 
-**¡Novedad!** Puedes controlar el teleprompter desde tu teléfono sin tocar la computadora.
+Puedes controlar el teleprompter desde tu teléfono sin tocar la computadora.
 
 **Pasos:**
 1. Asegúrate de que la computadora y el teléfono estén en la **misma red WiFi**
@@ -105,7 +110,26 @@ Una vez abierto el teleprompter, usa el teclado:
 - 📊 **Barra de progreso** en tiempo real
 - 👆 **Control táctil** (deslizar arriba/abajo para cambiar velocidad)
 
-### 5. Flujo de trabajo para grabar un video
+### 5. Sincronización por voz 🎤
+
+**¡Novedad!** El teleprompter puede escuchar tu voz y ajustar la velocidad automáticamente.
+
+**Cómo funciona:**
+1. Presiona `V` para activar la sincronización de voz
+2. El teleprompter escucha lo que hablas por el micrófono
+3. Compara tu velocidad de habla contra el WPM objetivo (configurable en `config.json`)
+4. Ajusta automáticamente la velocidad del scroll:
+   - Si hablas **rápido** → aumenta la velocidad
+   - Si hablas **lento** → disminuye la velocidad
+
+**Indicadores visuales:**
+- 🟢 Verde en la barra de herramientas = sincronización activa
+- ⚪ Gris = sincronización desactivada
+- 🔴 Rojo = modelo de voz no disponible
+
+**Tip:** Ajusta el WPM objetivo en `config.json` según tu ritmo natural de habla.
+
+### 6. Flujo de trabajo para grabar un video
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -114,33 +138,21 @@ Una vez abierto el teleprompter, usa el teclado:
 │  3. Ejecuta: python3 main.py scripts/guion.txt          │
 │  4. Ajusta tamaño de letra con +/-                      │
 │  5. Presiona Home para posicionar al inicio             │
-│  6. Presiona Q y escanea el QR con tu teléfono          │
-│  7. Prepara tu teléfono para grabar                     │
-│  8. Dale play a la grabación en el teléfono             │
-│  9. Desde el teléfono, presiona Play para iniciar       │
-│ 10. Lee mirando la pantalla de la laptop                │
-│ 11. Al terminar, presiona Pausar desde el teléfono      │
-│ 12. Repite si necesitas otra toma                        │
+│  6. Presiona V para activar sincronización de voz       │
+│  7. Presiona Q y escanea el QR con tu teléfono          │
+│  8. Prepara tu teléfono para grabar                     │
+│  9. Dale play a la grabación en el teléfono             │
+│ 10. Desde el teléfono, presiona Play para iniciar       │
+│ 11. Lee mirando la pantalla de la laptop                │
+│ 12. El teleprompter se ajusta a tu ritmo automáticamente│
+│ 13. Al terminar, presiona Pausar desde el teléfono      │
+│ 14. Repite si necesitas otra toma                        │
 └─────────────────────────────────────────────────────────┘
 ```
-
-### 6. Ajustar la velocidad
-
-La velocidad inicial es 3. Para encontrar tu ritmo ideal:
-
-1. Presiona `Espacio` para iniciar (hay cuenta regresiva 3-2-1)
-2. Si el texto va **muy rápido**, presiona `↓`
-3. Si el texto va **muy lento**, presiona `↑`
-4. Para cambios grandes, usa `Ctrl + ↑/↓` (±5) o `Shift + ↑/↓` (±10)
-5. También puedes usar la **rueda del mouse** o **deslizar** en el teléfono
-
-**Tip:** La mayoría de personas leen entre 130-160 palabras por minuto. Si tu discurso tiene 386 palabras (como el ejemplo) y quieres que dure 3 minutos, necesitas ~129 WPM.
 
 ### 7. Modificar la configuración
 
 Las preferencias se guardan automáticamente en `config.json` al cerrar la app.
-
-Puedes editar `config.json` manualmente antes de abrir el teleprompter:
 
 ```json
 {
@@ -156,8 +168,6 @@ Puedes editar `config.json` manualmente antes de abrir el teleprompter:
 }
 ```
 
-**Explicación de cada opción:**
-
 | Opción | Tipo | Default | Descripción |
 |--------|------|---------|-------------|
 | `font_size` | int | 42 | Tamaño de la letra |
@@ -169,7 +179,7 @@ Puedes editar `config.json` manualmente antes de abrir el teleprompter:
 | `margin_y` | int | 50 | Margen vertical en píxeles |
 | `mirror_mode` | bool | false | Invertir texto horizontalmente |
 | `fullscreen` | bool | true | Abrir en pantalla completa |
-| `wpm` | int | 150 | Palabras por minuto para estimar duración |
+| `wpm` | int | 150 | WPM objetivo para sincronización de voz |
 
 ---
 
@@ -197,18 +207,10 @@ Puedes editar `config.json` manualmente antes de abrir el teleprompter:
 
 ### Modo espejo
 
-Si montas un vidrio reflectante frente a la cámara del teléfono, activa el modo espejo para que el texto se vea correctamente:
+Si montas un vidrio reflectante frente a la cámara del teléfono:
 
 ```json
 "mirror_mode": true
-```
-
-### Ajustar márgenes
-
-Para textos más estrechos (si tiendes a escanear los ojos de lado a lado):
-
-```json
-"margin_x": 300
 ```
 
 ---
@@ -221,14 +223,16 @@ teleprompter/
 ├── ui.py                # Clase Teleprompter (interfaz PyQt6)
 ├── config.py            # Carga/guardado de configuración
 ├── remote_server.py     # Servidor Flask para control remoto
+├── speech_sync.py       # Sincronización de voz con Vosk
 ├── templates/
 │   └── remote.html      # Página de control remoto
+├── model-es/            # Modelo de Vosk (descargado, no versionado)
 ├── config.json          # Preferencias del usuario (generado)
 ├── scripts/
 │   └── guion_actual.txt # Guion por defecto
 ├── requirements.txt
-├── ROADMAP.md           # Mejoras planificadas
-└── README.md            # Este archivo
+├── ROADMAP.md
+└── README.md
 ```
 
 ---
@@ -239,22 +243,22 @@ teleprompter/
 Sí. El teleprompter soporta UTF-8 completo: tildes, ñ, emojis, y cualquier idioma.
 
 **¿Qué pasa si cierro sin guardar?**
-La configuración se guarda automáticamente al presionar `Escape`. Si la app se cierra forzadamente (matar el proceso), se perderán los cambios de esa sesión.
+La configuración se guarda automáticamente al presionar `Escape`. Si la app se cierra forzadamente, se perderán los cambios de esa sesión.
 
 **¿Puedo cambiar el tamaño de letra durante la grabación?**
-Sí. Presiona `+` o `-` en cualquier momento, incluso con el scroll activo.
-
-**¿El scroll es suave?**
-El scroll se mueve 1 píxel cada ciclo. Aumentar la velocidad reduce el intervalo entre movimientos, no la distancia.
+Sí. Presiona `+` o `-` en cualquier momento.
 
 **¿Funciona en Wayland?**
 El teleprompter usa PyQt6 que tiene mejor soporte que tkinter. Si tienes problemas, presiona `F` para alternar a modo ventana.
 
 **¿Cómo funciona el control remoto?**
-El teleprompter levanta un servidor local (Flask) en el puerto 5000. Al escanear el QR, se abre una página web que se comunica por WebSocket con el teleprompter. Todo es local, no requiere internet.
+El teleprompter levanta un servidor local (Flask) en el puerto 5000. Al escanear el QR, se abre una página web que se comunica por WebSocket. Todo es local, no requiere internet.
 
-**¿Es seguro el control remoto?**
-El servidor solo está disponible en tu red local. No se expone a internet y se cierra al cerrar el teleprompter.
+**¿Cómo funciona la sincronización por voz?**
+Usa Vosk (reconocimiento de voz local) para escuchar tu voz y compararla contra el guion. Ajusta automáticamente la velocidad del scroll según tu ritmo de habla. No requiere internet.
+
+**¿Necesito un micrófono especial?**
+No. Funciona con el micrófono integrado de tu laptop o uno USB básico.
 
 ---
 
@@ -266,9 +270,9 @@ Ver [ROADMAP.md](ROADMAP.md) para las mejoras planificadas.
 - ✅ Fase 0: Refactor base y modularización
 - ✅ Fase 1: Cuenta regresiva, progreso, selector de guion, línea guía
 - ✅ Fase 2: Control remoto desde el teléfono con Flask y QR
+- ✅ Fase 3: Sincronización inteligente con la voz (Vosk)
 
 **Próximas fases:**
-- 🔄 Fase 3: Sincronización inteligente con la voz
 - 🔄 Fase 4: Empaquetado y distribución
 - 🔄 Fase 5: Pulido y pruebas
 
