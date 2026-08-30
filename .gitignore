@@ -33,7 +33,6 @@ model-en/
 # Distribución
 dist/
 build/
-*.spec
 *.egg-info/
 *.egg
 
