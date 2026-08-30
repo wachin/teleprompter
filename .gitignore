@@ -1,0 +1,54 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.pyd
+
+# Virtual environments
+venv/
+env/
+.env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Configuración del usuario (generada, no versionar)
+config.json
+
+# Modelos de Vosk (descargados, muy pesados)
+model-es/
+model-en/
+*.zip
+
+# Distribución
+dist/
+build/
+*.spec
+*.egg-info/
+*.egg
+
+# PyInstaller
+*.exe
+*.app
+
+# Logs
+*.log
+
+# Dependencias pip
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Archivos temporales
+*.tmp
+*.bak
+*.backup
