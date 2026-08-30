@@ -14,6 +14,7 @@ from config import save_config
 import os
 import qrcode
 from io import BytesIO
+from speech_sync import SpeechSync
 
 
 class Teleprompter(QMainWindow):
@@ -71,6 +72,13 @@ class Teleprompter(QMainWindow):
         self.wpm_label = QLabel(f"WPM: {self.wpm}")
         self.wpm_label.setStyleSheet("color: #888; font-size: 14px; background: transparent;")
         toolbar_layout.addWidget(self.wpm_label)
+
+        toolbar_layout.addWidget(self._separator())
+
+        # Indicador de sincronización de voz
+        self.voice_sync_label = QLabel("🎤 V: Off")
+        self.voice_sync_label.setStyleSheet("color: #888; font-size: 14px; background: transparent;")
+        toolbar_layout.addWidget(self.voice_sync_label)
 
         main_layout.addWidget(self.toolbar)
 
@@ -207,6 +215,10 @@ class Teleprompter(QMainWindow):
         self.remote_server = None
         self._setup_remote_server()
 
+        # Sincronización de voz
+        self.speech_sync = None
+        self.speech_sync_active = False
+
     def _separator(self):
         """Crea un separador vertical."""
         sep = QFrame()
@@ -335,8 +347,52 @@ class Teleprompter(QMainWindow):
         else:
             self.guide_line.show()
 
+    def toggle_speech_sync(self):
+        """Activar/desactivar sincronización de voz."""
+        if self.speech_sync_active:
+            # Desactivar
+            if self.speech_sync:
+                self.speech_sync.stop()
+            self.speech_sync_active = False
+            self.voice_sync_label.setText("🎤 V: Off")
+            self.voice_sync_label.setStyleSheet("color: #888; font-size: 14px; background: transparent;")
+            print("[SpeechSync] Sincronización desactivada")
+        else:
+            # Activar
+            if not self.speech_sync:
+                self.speech_sync = SpeechSync(self)
+                self.speech_sync.set_script(self.text_content)
+                self.speech_sync.on_wpm_update = self._on_wpm_update
+                self.speech_sync.on_status_change = self._on_sync_status_change
+
+            if self.speech_sync.model:
+                if self.speech_sync.start():
+                    self.speech_sync_active = True
+                    self.voice_sync_label.setText("🎤 V: On")
+                    self.voice_sync_label.setStyleSheet("color: #44FF44; font-size: 14px; font-weight: bold; background: transparent;")
+                    print("[SpeechSync] Sincronización activada")
+            else:
+                print("[SpeechSync] Modelo de voz no disponible")
+                self.voice_sync_label.setText("🎤 V: Error")
+                self.voice_sync_label.setStyleSheet("color: #FF4444; font-size: 14px; background: transparent;")
+
+    def _on_wpm_update(self, current_wpm, target_wpm):
+        """Callback cuando se actualiza el WPM."""
+        self.wpm_label.setText(f"WPM: {current_wpm:.0f}/{target_wpm}")
+
+    def _on_sync_status_change(self, status):
+        """Callback cuando cambia el estado de sincronización."""
+        if status == "active":
+            self.voice_sync_label.setText("🎤 V: Listening")
+            self.voice_sync_label.setStyleSheet("color: #44FF44; font-size: 14px; font-weight: bold; background: transparent;")
+        else:
+            self.voice_sync_label.setText("🎤 V: Off")
+            self.voice_sync_label.setStyleSheet("color: #888; font-size: 14px; background: transparent;")
+
     def closeEvent(self, event):
         """Cerrar la aplicación y guardar configuración."""
+        if self.speech_sync and self.speech_sync_active:
+            self.speech_sync.stop()
         self._save_current_config()
         event.accept()
 
@@ -538,6 +594,8 @@ class Teleprompter(QMainWindow):
             self.toggle_guide_line()
         elif key == Qt.Key.Key_Q:
             self.show_qr_code()
+        elif key == Qt.Key.Key_V:
+            self.toggle_speech_sync()
         elif key == Qt.Key.Key_Escape:
             self.close()
         else:

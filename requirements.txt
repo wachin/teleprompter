@@ -11,5 +11,5 @@ qrcode[pil]>=7.4
 python-socketio[client]>=5.10.0
 
 # Fase 3: Sincronización por voz
-# vosk>=0.3.45
-# faster-whisper>=0.10.0
+vosk>=0.3.45
+sounddevice>=0.4.6
