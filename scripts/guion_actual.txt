@@ -1,57 +1,4 @@
-import tkinter as tk
-
-class Teleprompter:
-    def __init__(self, root, text):
-        self.root = root
-        self.root.attributes("-fullscreen", True)
-        self.root.configure(bg='black')
-
-        # Marco para estrechar el texto y evitar que los ojos escaneen de lado a lado
-        self.frame = tk.Frame(root, bg='black')
-        self.frame.pack(expand=True, fill='y', padx=200)
-
-        self.text_widget = tk.Text(self.frame, font=('Helvetica', 42, 'bold'),
-                                   bg='black', fg='#FFD700', wrap='word',
-                                   borderwidth=0, highlightthickness=0)
-        self.text_widget.pack(expand=True, fill='both', pady=50)
-
-        # Insertamos el guion
-        self.text_widget.insert('1.0', text)
-        self.text_widget.config(state='disabled')
-
-        # Variables de control
-        self.scroll_speed = 3
-        self.is_running = False
-
-        # Controles del teclado
-        self.root.bind('<space>', self.toggle)
-        self.root.bind('<Up>', self.speed_up)
-        self.root.bind('<Down>', self.speed_down)
-        self.root.bind('<Escape>', self.quit)
-
-        self.scroll()
-
-    def toggle(self, event):
-        self.is_running = not self.is_running
-
-    def speed_up(self, event):
-        self.scroll_speed += 1
-
-    def speed_down(self, event):
-        if self.scroll_speed > 1:
-            self.scroll_speed -= 1
-
-    def scroll(self):
-        if self.is_running:
-            self.text_widget.yview_scroll(1, 'pixels')
-        # Ajusta el divisor para cambiar la suavidad del scroll
-        self.root.after(int(50 / self.scroll_speed), self.scroll)
-
-    def quit(self, event):
-        self.root.destroy()
-
-# Tu guion exacto de 3 minutos
-guion = """Hola, jurado de Misión Emprende 593.
+Hola, jurado de Misión Emprende 593.
 
 Soy Juan Salazar Flores, y les hablo desde Jipijapa, Manabí.
 
@@ -83,9 +30,4 @@ Nuestro objetivo a escala es recuperar el rendimiento perdido y mitigar hasta 2.
 
 Señores del jurado, JCSF-Home no fabrica cajas; nosotros cobramos por inyectar inteligencia pura en la infraestructura crítica del mundo.
 
-Muchas gracias."""
-
-if __name__ == "__main__":
-    root = tk.Tk()
-    app = Teleprompter(root, guion)
-    root.mainloop()
+Muchas gracias.
