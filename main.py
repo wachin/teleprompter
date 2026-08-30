@@ -40,7 +40,7 @@ def main():
     print(f"Palabras: {len(text.split())}")
 
     app = QApplication(sys.argv)
-    window = Teleprompter(text, config)
+    window = Teleprompter(text, config, script_path)
     window.show()
     sys.exit(app.exec())
 
