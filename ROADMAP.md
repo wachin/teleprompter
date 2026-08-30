@@ -6,7 +6,7 @@
 
 ---
 
-## Estado actual
+## 🎉 ¡Proyecto completado! (2026-08-30)
 
 | Fase | Estado | Fecha |
 |------|--------|-------|
@@ -15,7 +15,7 @@
 | Fase 2 — Control remoto | ✅ Completada | 2026-08-30 |
 | Fase 3 — Sincronización con voz | ✅ Completada | 2026-08-30 |
 | Fase 4 — Empaquetado | ✅ Completada | 2026-08-30 |
-| Fase 5 — Pulido y pruebas | 🔄 Pendiente | — |
+| Fase 5 — Pulido y pruebas | ✅ Completada | 2026-08-30 |
 
 ---
 
@@ -38,7 +38,7 @@
 - [x] **Persistencia de configuración** (`config.json`)
 - [x] **Selector de guion**: diálogo de archivo con `O`
 - [x] **Línea guía horizontal**: con toggle `G`
-- [x] **Modo espejo horizontal** (configurável en config.json)
+- [x] **Modo espejo horizontal** (configurable en config.json)
 - [x] Atajos: `+`/`-` tamaño fuente, `F` pantalla completa, `Q` código QR
 
 ---
@@ -63,13 +63,6 @@
 - [x] Callbacks para actualización de WPM en tiempo real
 - [x] Integración con el sistema de scroll existente
 
-**Requisito adicional:** Descargar modelo de Vosk para español (~40MB):
-```bash
-wget https://alphacephei.com/vosk/models/vosk-model-es-0.42.zip
-unzip vosk-model-es-0.42.zip
-mv vosk-model-es-0.42 model-es
-```
-
 ---
 
 ## Fase 4 — Empaquetado y distribución ✅
@@ -80,54 +73,54 @@ mv vosk-model-es-0.42 model-es
 - [x] Archivo `TeleprompterPro.spec` con configuración avanzada
 - [x] Inclusión automática de scripts, templates y dependencias
 
-**Para empaquetar:**
-```bash
-# Modo directorio (rápido para pruebas)
-./build.sh
+---
 
-# Modo un solo archivo (más portable)
-./build.sh --onefile
-```
+## Fase 5 — Pulido y pruebas ✅
 
-**Resultado:** Ejecutable en `dist/TeleprompterPro/`
+- [x] Manejar casos límite de texto (palabras largas, saltos manuales, UTF-8)
+- [x] Pruebas unitarias para cálculo de velocidad y estimación de tiempo
+- [x] Validar `config.json` corrupto o incompleto
+- [x] Probar con guiones largos (10+ minutos)
+
+**Resumen de tests:**
+- 27 tests unitarios (100% pasaron)
+- `tests/test_config.py` — 11 tests de configuración
+- `tests/test_speech_sync.py` — 7 tests de sincronización de voz
+- `tests/test_edge_cases.py` — 9 tests de casos límite
 
 ---
 
-## Fase 5 — Pulido y pruebas 🔄
-
-- [ ] Manejar casos límite de texto (palabras largas, saltos manuales, UTF-8)
-- [ ] Pruebas unitarias para cálculo de velocidad y estimación de tiempo
-- [ ] Validar `config.json` corrupto o incompleto
-- [ ] Probar con guiones largos (10+ minutos)
-
----
-
-## Estructura del proyecto actual
+## Estructura del proyecto
 
 ```
 teleprompter/
-├── main.py              # Punto de entrada
-├── ui.py                # Clase Teleprompter (PyQt6)
-├── config.py            # Configuración persistente
-├── remote_server.py     # Servidor Flask para control remoto
-├── speech_sync.py       # Sincronización de voz con Vosk
-├── build.sh             # Script de empaquetado
-├── TeleprompterPro.spec # Configuración PyInstaller
+├── main.py                    # Punto de entrada
+├── ui.py                      # Clase Teleprompter (PyQt6)
+├── config.py                  # Configuración persistente
+├── remote_server.py           # Servidor Flask para control remoto
+├── speech_sync.py             # Sincronización de voz con Vosk
+├── build.sh                   # Script de empaquetado
+├── TeleprompterPro.spec       # Configuración PyInstaller
 ├── templates/
-│   └── remote.html      # Página de control remoto
-├── model-es/            # Modelo de Vosk (descargado)
-├── config.json          # Preferencias del usuario (generado)
+│   └── remote.html            # Página de control remoto
+├── tests/
+│   ├── test_config.py         # Tests de configuración
+│   ├── test_speech_sync.py    # Tests de sincronización
+│   └── test_edge_cases.py     # Tests de casos límite
 ├── scripts/
-│   └── guion_actual.txt # Guion por defecto
+│   ├── guion_actual.txt       # Guion por defecto
+│   └── guion_largo_ejemplo.txt # Script de prueba largo
+├── model-es/                  # Modelo de Vosk (descargado)
+├── config.json                # Preferencias del usuario (generado)
 ├── requirements.txt
 ├── .gitignore
-├── ROADMAP.md           # Este archivo
+├── ROADMAP.md                 # Este archivo
 └── README.md
 ```
 
 ---
 
-## Atajos de teclado (actuales)
+## Atajos de teclado
 
 | Tecla | Acción |
 |-------|--------|
@@ -143,3 +136,23 @@ teleprompter/
 | `Q` | Mostrar código QR |
 | `V` | Activar/desactivar sincronización de voz |
 | `Escape` | Salir (guarda config) |
+
+---
+
+## Resumen de características
+
+| Característica | Estado |
+|----------------|--------|
+| UI con PyQt6 | ✅ |
+| Cuenta regresiva 3-2-1 | ✅ |
+| Barra de progreso | ✅ |
+| Control de velocidad (±1, ±5, ±10) | ✅ |
+| Selector de guion | ✅ |
+| Línea guía | ✅ |
+| Modo espejo | ✅ |
+| Control remoto (Flask + QR) | ✅ |
+| Sincronización de voz (Vosk) | ✅ |
+| Persistencia de configuración | ✅ |
+| Empaquetado con PyInstaller | ✅ |
+| 27 tests unitarios | ✅ |
+| Documentación completa | ✅ |
