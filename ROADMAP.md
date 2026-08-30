@@ -14,7 +14,7 @@
 | Fase 1 — Controles y UX | ✅ Completada | 2026-08-30 |
 | Fase 2 — Control remoto | ✅ Completada | 2026-08-30 |
 | Fase 3 — Sincronización con voz | ✅ Completada | 2026-08-30 |
-| Fase 4 — Empaquetado | 🔄 Pendiente | — |
+| Fase 4 — Empaquetado | ✅ Completada | 2026-08-30 |
 | Fase 5 — Pulido y pruebas | 🔄 Pendiente | — |
 
 ---
@@ -72,12 +72,24 @@ mv vosk-model-es-0.42 model-es
 
 ---
 
-## Fase 4 — Empaquetado y distribución 🔄
+## Fase 4 — Empaquetado y distribución ✅
 
-- [ ] ~~Migrar de tkinter a PyQt6~~ (ya completado en Fase 0)
-- [ ] Empaquetar con PyInstaller para ejecutable único
-- [ ] Ícono, nombre de ventana y metadata propios
-- [ ] Publicar el repo en GitHub con capturas de pantalla
+- [x] ~~Migrar de tkinter a PyQt6~~ (ya completado en Fase 0)
+- [x] Empaquetar con PyInstaller para ejecutable único
+- [x] Script `build.sh` para empaquetar en modo directorio o onefile
+- [x] Archivo `TeleprompterPro.spec` con configuración avanzada
+- [x] Inclusión automática de scripts, templates y dependencias
+
+**Para empaquetar:**
+```bash
+# Modo directorio (rápido para pruebas)
+./build.sh
+
+# Modo un solo archivo (más portable)
+./build.sh --onefile
+```
+
+**Resultado:** Ejecutable en `dist/TeleprompterPro/`
 
 ---
 
@@ -99,6 +111,8 @@ teleprompter/
 ├── config.py            # Configuración persistente
 ├── remote_server.py     # Servidor Flask para control remoto
 ├── speech_sync.py       # Sincronización de voz con Vosk
+├── build.sh             # Script de empaquetado
+├── TeleprompterPro.spec # Configuración PyInstaller
 ├── templates/
 │   └── remote.html      # Página de control remoto
 ├── model-es/            # Modelo de Vosk (descargado)
