@@ -8,7 +8,7 @@ Uso:
 
 import sys
 import os
-import tkinter as tk
+from PyQt6.QtWidgets import QApplication
 
 from config import load_config
 from ui import Teleprompter
@@ -39,9 +39,10 @@ def main():
     print(f"Guion cargado: {script_path}")
     print(f"Palabras: {len(text.split())}")
 
-    root = tk.Tk()
-    app = Teleprompter(root, text, config)
-    root.mainloop()
+    app = QApplication(sys.argv)
+    window = Teleprompter(text, config)
+    window.show()
+    sys.exit(app.exec())
 
 
 if __name__ == "__main__":

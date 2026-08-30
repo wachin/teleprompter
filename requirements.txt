@@ -1,9 +1,8 @@
 # Teleprompter Pro
 # Python 3.10+ (probado en Debian 13 / MX Linux)
-#
-# tkinter viene incluido con Python estándar.
-# No se necesitan dependencias externas para la Fase 0-1.
-# Dependencias futuras se agregarán aquí por fase.
+
+# Fase 0-1: UI
+PyQt6>=6.6.0
 
 # Fase 2: Control remoto
 # flask>=3.0
