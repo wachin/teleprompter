@@ -2,13 +2,14 @@
 
 Un teleprompter de escritorio para presentaciones y grabaciones. Diseñado para un flujo de uso real: **la computadora lee el guion** y **el teléfono graba el video**.
 
+**Multiplataforma:** Funciona en Windows, Linux y macOS.
+
 ---
 
 ## 📦 Requisitos
 
 - Python 3.10+
 - PyQt6 (se instala con pip)
-- Linux (Debian 13 / MX Linux recomendado)
 - Misma red WiFi (para control remoto desde el teléfono)
 - Micrófono (para sincronización por voz, opcional)
 
@@ -23,7 +24,8 @@ cd teleprompter
 
 # 2. (Opcional) Crear entorno virtual
 python3 -m venv venv
-source venv/bin/activate
+source venv/bin/activate  # Linux/macOS
+# venv\Scripts\activate   # Windows
 
 # 3. Instalar dependencias
 pip install -r requirements.txt
@@ -112,7 +114,7 @@ Puedes controlar el teleprompter desde tu teléfono sin tocar la computadora.
 
 ### 5. Sincronización por voz 🎤
 
-**¡Novedad!** El teleprompter puede escuchar tu voz y ajustar la velocidad automáticamente.
+El teleprompter puede escuchar tu voz y ajustar la velocidad automáticamente.
 
 **Cómo funciona:**
 1. Presiona `V` para activar la sincronización de voz
@@ -123,36 +125,36 @@ Puedes controlar el teleprompter desde tu teléfono sin tocar la computadora.
    - Si hablas **lento** → disminuye la velocidad
 
 **Indicadores visuales:**
-- 🟢 Verde en la barra de herramientas = sincronización activa
+- 🟢 Verde = sincronización activa
 - ⚪ Gris = sincronización desactivada
 - 🔴 Rojo = modelo de voz no disponible
 
-**Tip:** Ajusta el WPM objetivo en `config.json` según tu ritmo natural de habla.
+### 6. Configuración multiplataforma ⚙️
 
-### 6. Flujo de trabajo para grabar un video
+Las preferencias se guardan automáticamente en `config.json` al cerrar la app. La ubicación depende de tu sistema operativo:
 
+| Plataforma | Ruta de configuración |
+|------------|----------------------|
+| **Windows** | `%AppData%\TeleprompterPro\config.json` |
+| **Linux** | `~/.config/TeleprompterPro/config.json` |
+| **macOS** | `~/Library/Application Support/TeleprompterPro/config.json` |
+
+**En Windows**, la ruta completa suele ser:
 ```
-┌─────────────────────────────────────────────────────────┐
-│  1. Prepara tu guion en scripts/guion.txt               │
-│  2. Posiciona tu laptop frente a ti                     │
-│  3. Ejecuta: python3 main.py scripts/guion.txt          │
-│  4. Ajusta tamaño de letra con +/-                      │
-│  5. Presiona Home para posicionar al inicio             │
-│  6. Presiona V para activar sincronización de voz       │
-│  7. Presiona Q y escanea el QR con tu teléfono          │
-│  8. Prepara tu teléfono para grabar                     │
-│  9. Dale play a la grabación en el teléfono             │
-│ 10. Desde el teléfono, presiona Play para iniciar       │
-│ 11. Lee mirando la pantalla de la laptop                │
-│ 12. El teleprompter se ajusta a tu ritmo automáticamente│
-│ 13. Al terminar, presiona Pausar desde el teléfono      │
-│ 14. Repite si necesitas otra toma                        │
-└─────────────────────────────────────────────────────────┘
+C:\Users\TuUsuario\AppData\Roaming\TeleprompterPro\config.json
 ```
 
-### 7. Modificar la configuración
+**En Linux:**
+```
+/home/tuusuario/.config/TeleprompterPro/config.json
+```
 
-Las preferencias se guardan automáticamente en `config.json` al cerrar la app.
+**En macOS:**
+```
+/Users/tuusuario/Library/Application Support/TeleprompterPro/config.json
+```
+
+### 7. Opciones de configuración
 
 ```json
 {
@@ -174,7 +176,7 @@ Las preferencias se guardan automáticamente en `config.json` al cerrar la app.
 | `font_family` | string | "Helvetica" | Fuente utilizada |
 | `text_color` | string | "#FFD700" | Color del texto (dorado) |
 | `bg_color` | string | "black" | Color de fondo |
-| `scroll_speed` | int | 3 | Velocidad del scroll |
+| `scroll_speed` | int | 3 | Velocidad del scroll (se recuerda al cerrar) |
 | `margin_x` | int | 200 | Margen lateral en píxeles |
 | `margin_y` | int | 50 | Margen vertical en píxeles |
 | `mirror_mode` | bool | false | Invertir texto horizontalmente |
@@ -221,16 +223,23 @@ Si montas un vidrio reflectante frente a la cámara del teléfono:
 teleprompter/
 ├── main.py              # Punto de entrada
 ├── ui.py                # Clase Teleprompter (interfaz PyQt6)
-├── config.py            # Carga/guardado de configuración
+├── config.py            # Configuración multiplataforma
 ├── remote_server.py     # Servidor Flask para control remoto
 ├── speech_sync.py       # Sincronización de voz con Vosk
+├── build.sh             # Script de empaquetado
+├── TeleprompterPro.spec # Configuración PyInstaller
 ├── templates/
 │   └── remote.html      # Página de control remoto
-├── model-es/            # Modelo de Vosk (descargado, no versionado)
-├── config.json          # Preferencias del usuario (generado)
+├── tests/
+│   ├── test_config.py
+│   ├── test_speech_sync.py
+│   └── test_edge_cases.py
 ├── scripts/
-│   └── guion_actual.txt # Guion por defecto
+│   ├── guion_actual.txt
+│   └── guion_largo_ejemplo.txt
+├── model-es/            # Modelo de Vosk (descargado)
 ├── requirements.txt
+├── .gitignore
 ├── ROADMAP.md
 └── README.md
 ```
@@ -242,14 +251,14 @@ teleprompter/
 **¿Puedo usar un guion en otro idioma?**
 Sí. El teleprompter soporta UTF-8 completo: tildes, ñ, emojis, y cualquier idioma.
 
-**¿Qué pasa si cierro sin guardar?**
-La configuración se guarda automáticamente al presionar `Escape`. Si la app se cierra forzadamente, se perderán los cambios de esa sesión.
+**¿Dónde se guarda mi configuración?**
+Depende de tu sistema operativo. Ver la sección "Configuración multiplataforma" arriba.
 
-**¿Puedo cambiar el tamaño de letra durante la grabación?**
-Sí. Presiona `+` o `-` en cualquier momento.
+**¿Recuerda mi última velocidad?**
+Sí. La velocidad se guarda automáticamente al cerrar la app y se restaura al iniciar.
 
 **¿Funciona en Wayland?**
-El teleprompter usa PyQt6 que tiene mejor soporte que tkinter. Si tienes problemas, presiona `F` para alternar a modo ventana.
+Sí. PyQt6 tiene mejor soporte que tkinter. Si tienes problemas, presiona `F` para alternar a modo ventana.
 
 **¿Cómo funciona el control remoto?**
 El teleprompter levanta un servidor local (Flask) en el puerto 5000. Al escanear el QR, se abre una página web que se comunica por WebSocket. Todo es local, no requiere internet.
@@ -257,24 +266,19 @@ El teleprompter levanta un servidor local (Flask) en el puerto 5000. Al escanear
 **¿Cómo funciona la sincronización por voz?**
 Usa Vosk (reconocimiento de voz local) para escuchar tu voz y compararla contra el guion. Ajusta automáticamente la velocidad del scroll según tu ritmo de habla. No requiere internet.
 
-**¿Necesito un micrófono especial?**
-No. Funciona con el micrófono integrado de tu laptop o uno USB básico.
-
 ---
 
 ## 🗺️ Roadmap
 
 Ver [ROADMAP.md](ROADMAP.md) para las mejoras planificadas.
 
-**Fases completadas:**
+**Todas las fases completadas:**
 - ✅ Fase 0: Refactor base y modularización
 - ✅ Fase 1: Cuenta regresiva, progreso, selector de guion, línea guía
 - ✅ Fase 2: Control remoto desde el teléfono con Flask y QR
 - ✅ Fase 3: Sincronización inteligente con la voz (Vosk)
-
-**Próximas fases:**
-- 🔄 Fase 4: Empaquetado y distribución
-- 🔄 Fase 5: Pulido y pruebas
+- ✅ Fase 4: Empaquetado con PyInstaller
+- ✅ Fase 5: Pulido y 27 tests unitarios
 
 ---
 
