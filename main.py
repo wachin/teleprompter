@@ -10,7 +10,7 @@ import sys
 import os
 from PyQt6.QtWidgets import QApplication
 
-from config import load_config
+from config import load_config, get_config_path
 from ui import Teleprompter
 
 
@@ -38,6 +38,7 @@ def main():
     text = load_script(script_path)
     print(f"Guion cargado: {script_path}")
     print(f"Palabras: {len(text.split())}")
+    print(f"Config: {get_config_path()}")
 
     app = QApplication(sys.argv)
     window = Teleprompter(text, config, script_path)
