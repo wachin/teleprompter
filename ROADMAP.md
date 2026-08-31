@@ -1,158 +1,158 @@
 # ROADMAP — Teleprompter Pro
 
-> Contexto de uso real: **la computadora se usa para leer el guion** y **el teléfono se usa para grabar el video**.
-> Esto significa que durante la grabación las manos están ocupadas y el teléfono no está disponible para tocar el teclado.
-> Ese único hecho condiciona buena parte de las prioridades de abajo (control remoto > controles solo de teclado).
+> Real-world usage context: **the computer is used to read the script** and **the phone is used to record the video**.
+> This means that during recording, hands are occupied and the phone is not available for keyboard input.
+> This single fact shapes most of the priorities below (remote control > keyboard-only controls).
 
 ---
 
-## 🎉 ¡Proyecto completado! (2026-08-30)
+## 🎉 Project Completed! (2026-08-30)
 
-| Fase | Estado | Fecha |
-|------|--------|-------|
-| Fase 0 — Preparar el terreno | ✅ Completada | 2026-08-30 |
-| Fase 1 — Controles y UX | ✅ Completada | 2026-08-30 |
-| Fase 2 — Control remoto | ✅ Completada | 2026-08-30 |
-| Fase 3 — Sincronización con voz | ✅ Completada | 2026-08-30 |
-| Fase 4 — Empaquetado | ✅ Completada | 2026-08-30 |
-| Fase 5 — Pulido y pruebas | ✅ Completada | 2026-08-30 |
-
----
-
-## Fase 0 — Preparar el terreno ✅
-
-- [x] Separar `telepromt.py` en módulos: `main.py`, `ui.py`, `config.py`, `scripts/`
-- [x] Mover el guion a `scripts/guion_actual.txt`, cargado por ruta o argumento CLI
-- [x] Agregar `requirements.txt` con dependencias
-- [x] Agregar `README.md` en español con instrucciones de uso
-- [x] Migrar de tkinter a PyQt6 para mejor compatibilidad Wayland/X11
+| Phase | Status | Date |
+|-------|--------|------|
+| Phase 0 — Groundwork | ✅ Completed | 2026-08-30 |
+| Phase 1 — Controls & UX | ✅ Completed | 2026-08-30 |
+| Phase 2 — Remote Control | ✅ Completed | 2026-08-30 |
+| Phase 3 — Voice Sync | ✅ Completed | 2026-08-30 |
+| Phase 4 — Packaging | ✅ Completed | 2026-08-30 |
+| Phase 5 — Polish & Tests | ✅ Completed | 2026-08-30 |
 
 ---
 
-## Fase 1 — Controles y UX del lector ✅
+## Phase 0 — Groundwork ✅
 
-- [x] **Cuenta regresiva inicial** (3-2-1) antes de empezar a hacer scroll
-- [x] **Reinicio rápido** (`Home` o `R`): vuelve el texto al inicio
-- [x] **Indicador de progreso**: barra de progreso con porcentaje y tiempo estimado restante
-- [x] **Cálculo de duración estimada** basado en WPM configurable
-- [x] **Persistencia de configuración** (`config.json`)
-- [x] **Selector de guion**: diálogo de archivo con `O`
-- [x] **Línea guía horizontal**: con toggle `G`
-- [x] **Modo espejo horizontal** (configurable en config.json)
-- [x] Atajos: `+`/`-` tamaño fuente, `F` pantalla completa, `Q` código QR
+- [x] Split `telepromt.py` into modules: `main.py`, `ui.py`, `config.py`, `scripts/`
+- [x] Move script to `scripts/current_script.txt`, loaded by path or CLI argument
+- [x] Add `requirements.txt` with dependencies
+- [x] Add `README.md` with usage instructions
+- [x] Migrate from tkinter to PyQt6 for better Wayland/X11 compatibility
 
 ---
 
-## Fase 2 — Control remoto desde el teléfono ✅
+## Phase 1 — Controls & Reader UX ✅
 
-- [x] Servidor Flask + WebSocket embebido en la app
-- [x] Página HTML responsive para control remoto
-- [x] Código QR generado al presionar `Q`
-- [x] Controles: Play/Pausa, Velocidad +/-, Reiniciar
-- [x] Control táctil (deslizar arriba/abajo para velocidad)
-- [x] Barra de progreso en tiempo real
-
----
-
-## Fase 3 — Sincronización inteligente con la voz ✅
-
-- [x] Integrar reconocimiento de voz local con Vosk
-- [x] Ajuste automático de velocidad según WPM del orador
-- [x] Indicadores visuales de sincronización (verde/gris/rojo)
-- [x] Tecla `V` para activar/desactivar sincronización
-- [x] Callbacks para actualización de WPM en tiempo real
-- [x] Integración con el sistema de scroll existente
+- [x] **Initial countdown** (3-2-1) before scrolling starts
+- [x] **Quick reset** (`Home` or `R`): return text to beginning
+- [x] **Progress indicator**: progress bar with percentage and estimated remaining time
+- [x] **Estimated duration calculation** based on configurable WPM
+- [x] **Configuration persistence** (`config.json`)
+- [x] **Script selector**: file dialog with `O`
+- [x] **Horizontal guide line**: toggle with `G`
+- [x] **Horizontal mirror mode** (configurable in config.json)
+- [x] Shortcuts: `+`/`-` font size, `F` fullscreen, `Q` QR code
 
 ---
 
-## Fase 4 — Empaquetado y distribución ✅
+## Phase 2 — Phone Remote Control ✅
 
-- [x] ~~Migrar de tkinter a PyQt6~~ (ya completado en Fase 0)
-- [x] Empaquetar con PyInstaller para ejecutable único
-- [x] Script `build.sh` para empaquetar en modo directorio o onefile
-- [x] Archivo `TeleprompterPro.spec` con configuración avanzada
-- [x] Inclusión automática de scripts, templates y dependencias
-
----
-
-## Fase 5 — Pulido y pruebas ✅
-
-- [x] Manejar casos límite de texto (palabras largas, saltos manuales, UTF-8)
-- [x] Pruebas unitarias para cálculo de velocidad y estimación de tiempo
-- [x] Validar `config.json` corrupto o incompleto
-- [x] Probar con guiones largos (10+ minutos)
-
-**Resumen de tests:**
-- 27 tests unitarios (100% pasaron)
-- `tests/test_config.py` — 11 tests de configuración
-- `tests/test_speech_sync.py` — 7 tests de sincronización de voz
-- `tests/test_edge_cases.py` — 9 tests de casos límite
+- [x] Flask + WebSocket server embedded in the app
+- [x] Responsive HTML page for remote control
+- [x] QR code generated on `Q` press
+- [x] Controls: Play/Pause, Speed +/-, Reset
+- [x] Touch control (swipe up/down for speed)
+- [x] Real-time progress bar
 
 ---
 
-## Estructura del proyecto
+## Phase 3 — Intelligent Voice Synchronization ✅
+
+- [x] Local speech recognition with Vosk
+- [x] Automatic speed adjustment based on speaker's WPM
+- [x] Visual sync indicators (green/gray/red)
+- [x] `V` key to toggle voice synchronization
+- [x] Callbacks for real-time WPM updates
+- [x] Integration with existing scroll system
+
+---
+
+## Phase 4 — Packaging & Distribution ✅
+
+- [x] ~~Migrate from tkinter to PyQt6~~ (already completed in Phase 0)
+- [x] Package with PyInstaller for single executable
+- [x] `build.sh` script for directory or onefile mode
+- [x] `TeleprompterPro.spec` with advanced configuration
+- [x] Automatic inclusion of scripts, templates, and dependencies
+
+---
+
+## Phase 5 — Polish & Tests ✅
+
+- [x] Handle text edge cases (long words, manual line breaks, UTF-8)
+- [x] Unit tests for speed calculation and time estimation
+- [x] Validate corrupt or incomplete `config.json`
+- [x] Test with long scripts (10+ minutes)
+
+**Test summary:**
+- 27 unit tests (100% passed)
+- `tests/test_config.py` — 11 configuration tests
+- `tests/test_speech_sync.py` — 7 voice sync tests
+- `tests/test_edge_cases.py` — 9 edge case tests
+
+---
+
+## Project Structure
 
 ```
 teleprompter/
-├── main.py                    # Punto de entrada
-├── ui.py                      # Clase Teleprompter (PyQt6)
-├── config.py                  # Configuración persistente
-├── remote_server.py           # Servidor Flask para control remoto
-├── speech_sync.py             # Sincronización de voz con Vosk
-├── build.sh                   # Script de empaquetado
-├── TeleprompterPro.spec       # Configuración PyInstaller
+├── main.py                    # Entry point
+├── ui.py                      # Teleprompter class (PyQt6)
+├── config.py                  # Persistent configuration
+├── remote_server.py           # Flask server for remote control
+├── speech_sync.py             # Voice sync with Vosk
+├── build.sh                   # Build script
+├── TeleprompterPro.spec       # PyInstaller configuration
 ├── templates/
-│   └── remote.html            # Página de control remoto
+│   └── remote.html            # Remote control page
 ├── tests/
-│   ├── test_config.py         # Tests de configuración
-│   ├── test_speech_sync.py    # Tests de sincronización
-│   └── test_edge_cases.py     # Tests de casos límite
+│   ├── test_config.py         # Configuration tests
+│   ├── test_speech_sync.py    # Sync tests
+│   └── test_edge_cases.py     # Edge case tests
 ├── scripts/
-│   ├── guion_actual.txt       # Guion por defecto
-│   └── guion_largo_ejemplo.txt # Script de prueba largo
-├── model-es/                  # Modelo de Vosk (descargado)
-├── config.json                # Preferencias del usuario (generado)
+│   ├── current_script.txt     # Default script
+│   └── long_script_example.txt # Long test script
+├── model-es/                  # Vosk model (downloaded)
+├── config.json                # User preferences (generated)
 ├── requirements.txt
 ├── .gitignore
-├── ROADMAP.md                 # Este archivo
+├── ROADMAP.md                 # This file
 └── README.md
 ```
 
 ---
 
-## Atajos de teclado
+## Keyboard Shortcuts
 
-| Tecla | Acción |
-|-------|--------|
-| `Espacio` | Play/Pausa con cuenta regresiva |
-| `↑` / `↓` | Velocidad ±1 |
-| `Ctrl + ↑/↓` | Velocidad ±5 |
-| `Shift + ↑/↓` | Velocidad ±10 |
-| `Home` / `R` | Reiniciar al inicio |
-| `+` / `-` | Tamaño de fuente |
-| `F` | Pantalla completa on/off |
-| `O` | Abrir selector de guion |
-| `G` | Mostrar/ocultar línea guía |
-| `Q` | Mostrar código QR |
-| `V` | Activar/desactivar sincronización de voz |
-| `Escape` | Salir (guarda config) |
+| Key | Action |
+|-----|--------|
+| `Space` | Play/Pause with countdown |
+| `↑` / `↓` | Speed ±1 |
+| `Ctrl + ↑/↓` | Speed ±5 |
+| `Shift + ↑/↓` | Speed ±10 |
+| `Home` / `R` | Reset to beginning |
+| `+` / `-` | Font size |
+| `F` | Toggle fullscreen |
+| `O` | Open script selector |
+| `G` | Show/hide guide line |
+| `Q` | Show QR code |
+| `V` | Toggle voice sync |
+| `Escape` | Exit (saves config) |
 
 ---
 
-## Resumen de características
+## Feature Summary
 
-| Característica | Estado |
-|----------------|--------|
-| UI con PyQt6 | ✅ |
-| Cuenta regresiva 3-2-1 | ✅ |
-| Barra de progreso | ✅ |
-| Control de velocidad (±1, ±5, ±10) | ✅ |
-| Selector de guion | ✅ |
-| Línea guía | ✅ |
-| Modo espejo | ✅ |
-| Control remoto (Flask + QR) | ✅ |
-| Sincronización de voz (Vosk) | ✅ |
-| Persistencia de configuración | ✅ |
-| Empaquetado con PyInstaller | ✅ |
-| 27 tests unitarios | ✅ |
-| Documentación completa | ✅ |
+| Feature | Status |
+|---------|--------|
+| PyQt6 UI | ✅ |
+| 3-2-1 Countdown | ✅ |
+| Progress bar | ✅ |
+| Speed control (±1, ±5, ±10) | ✅ |
+| Script selector | ✅ |
+| Guide line | ✅ |
+| Mirror mode | ✅ |
+| Remote control (Flask + QR) | ✅ |
+| Voice sync (Vosk) | ✅ |
+| Configuration persistence | ✅ |
+| PyInstaller packaging | ✅ |
+| 27 unit tests | ✅ |
+| Complete documentation | ✅ |

@@ -1,42 +1,42 @@
 # Teleprompter Pro
 
-Un teleprompter de escritorio para presentaciones y grabaciones. Diseñado para un flujo de uso real: **la computadora lee el guion** y **el teléfono graba el video**.
+A desktop teleprompter for presentations and recordings. Designed for a real-world workflow: **the computer reads the script** and **the phone records the video**.
 
-**Multiplataforma:** Funciona en Windows, Linux y macOS.
+**Cross-platform:** Works on Windows, Linux, and macOS.
 
 ---
 
-## 📦 Requisitos
+## 📦 Requirements
 
 - Python 3.10+
-- PyQt6 (se instala con pip)
-- Misma red WiFi (para control remoto desde el teléfono)
-- Micrófono (para sincronización por voz, opcional)
+- PyQt6 (installed via pip)
+- Same WiFi network (for phone remote control)
+- Microphone (for voice sync, optional)
 
 ---
 
-## 🚀 Instalación
+## 🚀 Installation
 
 ```bash
-# 1. Clonar el repositorio
+# 1. Clone the repository
 git clone https://github.com/wachin/teleprompter.git
 cd teleprompter
 
-# 2. (Opcional) Crear entorno virtual
+# 2. (Optional) Create virtual environment
 python3 -m venv venv
 source venv/bin/activate  # Linux/macOS
 # venv\Scripts\activate   # Windows
 
-# 3. Instalar dependencias
+# 3. Install dependencies
 pip install -r requirements.txt
 
-# 4. Ejecutar
+# 4. Run
 python3 main.py
 ```
 
-### Instalar modelo de voz (opcional)
+### Install voice model (optional)
 
-Para usar la sincronización por voz, descarga el modelo de español:
+To use voice synchronization, download the Spanish model:
 
 ```bash
 wget https://alphacephei.com/vosk/models/vosk-model-es-0.42.zip
@@ -46,115 +46,115 @@ mv vosk-model-es-0.42 model-es
 
 ---
 
-## 📖 Manual de uso paso a paso
+## 📖 Step-by-step User Manual
 
-### 1. Preparar tu guion
+### 1. Prepare your script
 
-Escribe o pega tu discurso en un archivo de texto plano (`.txt`) dentro de la carpeta `scripts/`:
+Write or paste your speech in a plain text file (`.txt`) inside the `scripts/` folder:
 
 ```
 teleprompter/scripts/
-├── guion_actual.txt    ← guion por defecto
-├── discurso_mision.txt ← tus propios guiones
-└── presentacion.txt
+├── current_script.txt    ← default script
+├── mission_speech.txt    ← your own scripts
+└── presentation.txt
 ```
 
-**Consejos para el guion:**
-- Usa párrafos cortos (2-3 oraciones máximo)
-- Separa ideas con líneas vacías
-- No uses formato rico (negrita, cursiva) — solo texto plano
-- Guarda el archivo con codificación UTF-8 para soportar tildes y ñ
+**Script tips:**
+- Use short paragraphs (2-3 sentences max)
+- Separate ideas with blank lines
+- No rich formatting (bold, italic) — plain text only
+- Save with UTF-8 encoding for accents and special characters
 
-### 2. Ejecutar el teleprompter
+### 2. Run the teleprompter
 
-**Cargar el guion por defecto:**
+**Load the default script:**
 ```bash
 python3 main.py
 ```
 
-**Cargar un guion específico:**
+**Load a specific script:**
 ```bash
-python3 main.py scripts/discurso_mision.txt
+python3 main.py scripts/mission_speech.txt
 ```
 
-### 3. Controlar la reproducción
+### 3. Control playback
 
-| Tecla | Acción | Descripción |
-|-------|--------|-------------|
-| `Espacio` | ▶ / ⏸ | Inicia con cuenta regresiva 3-2-1, o pausa |
-| `↑` | 🔼 | Aumenta la velocidad (+1) |
-| `↓` | 🔽 | Disminuye la velocidad (-1) |
-| `Ctrl + ↑/↓` | ⚡ | Cambio rápido de velocidad (±5) |
-| `Shift + ↑/↓` | ⚡⚡ | Cambio muy rápido (±10) |
-| `Home` / `R` | 🔄 | Vuelve al inicio del texto |
-| `+` / `-` | 🔤 | Aumenta/disminuye tamaño de letra |
-| `F` | 🖥️ | Alterna pantalla completa / ventana |
-| `O` | 📄 | Abrir selector de guion |
-| `G` | 📏 | Mostrar/ocultar línea guía |
-| `Q` | 📱 | Mostrar código QR para control remoto |
-| `V` | 🎤 | Activar/desactivar sincronización de voz |
-| `Escape` | ❌ | Cierra la app (guarda configuración) |
+| Key | Action | Description |
+|-----|--------|-------------|
+| `Space` | ▶ / ⏸ | Start with 3-2-1 countdown, or pause |
+| `↑` | 🔼 | Increase speed (+1) |
+| `↓` | 🔽 | Decrease speed (-1) |
+| `Ctrl + ↑/↓` | ⚡ | Fast speed change (±5) |
+| `Shift + ↑/↓` | ⚡⚡ | Very fast speed change (±10) |
+| `Home` / `R` | 🔄 | Return to beginning of text |
+| `+` / `-` | 🔤 | Increase/decrease font size |
+| `F` | 🖥️ | Toggle fullscreen / windowed |
+| `O` | 📄 | Open script selector |
+| `G` | 📏 | Show/hide guide line |
+| `Q` | 📱 | Show QR code for remote control |
+| `V` | 🎤 | Toggle voice synchronization |
+| `Escape` | ❌ | Close app (saves configuration) |
 
-### 4. Control remoto desde el teléfono 📱
+### 4. Phone remote control 📱
 
-Puedes controlar el teleprompter desde tu teléfono sin tocar la computadora.
+You can control the teleprompter from your phone without touching the computer.
 
-**Pasos:**
-1. Asegúrate de que la computadora y el teléfono estén en la **misma red WiFi**
-2. Presiona `Q` en la computadora para ver el código QR
-3. Escanea el código QR con la cámara del teléfono
-4. Se abrirá la página de control remoto en el navegador del teléfono
+**Steps:**
+1. Make sure your computer and phone are on the **same WiFi network**
+2. Press `Q` on the computer to show the QR code
+3. Scan the QR code with your phone's camera
+4. The remote control page will open in your phone's browser
 
-**Funciones del control remoto:**
-- ▶ **Play/Pausa** con cuenta regresiva
-- 🔼 **Velocidad +/-** con botones grandes
-- 🔄 **Reiniciar** para volver al inicio
-- 📊 **Barra de progreso** en tiempo real
-- 👆 **Control táctil** (deslizar arriba/abajo para cambiar velocidad)
+**Remote control features:**
+- ▶ **Play/Pause** with countdown
+- 🔼 **Speed +/-** with large buttons
+- 🔄 **Reset** to return to the beginning
+- 📊 **Progress bar** in real-time
+- 👆 **Touch control** (swipe up/down to change speed)
 
-### 5. Sincronización por voz 🎤
+### 5. Voice synchronization 🎤
 
-El teleprompter puede escuchar tu voz y ajustar la velocidad automáticamente.
+The teleprompter can listen to your voice and automatically adjust the speed.
 
-**Cómo funciona:**
-1. Presiona `V` para activar la sincronización de voz
-2. El teleprompter escucha lo que hablas por el micrófono
-3. Compara tu velocidad de habla contra el WPM objetivo (configurable en `config.json`)
-4. Ajusta automáticamente la velocidad del scroll:
-   - Si hablas **rápido** → aumenta la velocidad
-   - Si hablas **lento** → disminuye la velocidad
+**How it works:**
+1. Press `V` to activate voice synchronization
+2. The teleprompter listens to what you say through the microphone
+3. It compares your speaking speed against the target WPM (configurable in `config.json`)
+4. It automatically adjusts the scroll speed:
+   - If you speak **fast** → increases speed
+   - If you speak **slow** → decreases speed
 
-**Indicadores visuales:**
-- 🟢 Verde = sincronización activa
-- ⚪ Gris = sincronización desactivada
-- 🔴 Rojo = modelo de voz no disponible
+**Visual indicators:**
+- 🟢 Green = sync active
+- ⚪ Gray = sync disabled
+- 🔴 Red = voice model not available
 
-### 6. Configuración multiplataforma ⚙️
+### 6. Cross-platform configuration ⚙️
 
-Las preferencias se guardan automáticamente en `config.json` al cerrar la app. La ubicación depende de tu sistema operativo:
+Preferences are automatically saved to `config.json` when you close the app. The location depends on your operating system:
 
-| Plataforma | Ruta de configuración |
-|------------|----------------------|
+| Platform | Configuration path |
+|----------|-------------------|
 | **Windows** | `%AppData%\TeleprompterPro\config.json` |
 | **Linux** | `~/.config/TeleprompterPro/config.json` |
 | **macOS** | `~/Library/Application Support/TeleprompterPro/config.json` |
 
-**En Windows**, la ruta completa suele ser:
+**On Windows**, the full path is usually:
 ```
-C:\Users\TuUsuario\AppData\Roaming\TeleprompterPro\config.json
-```
-
-**En Linux:**
-```
-/home/tuusuario/.config/TeleprompterPro/config.json
+C:\Users\YourUsername\AppData\Roaming\TeleprompterPro\config.json
 ```
 
-**En macOS:**
+**On Linux:**
 ```
-/Users/tuusuario/Library/Application Support/TeleprompterPro/config.json
+/home/yourusername/.config/TeleprompterPro/config.json
 ```
 
-### 7. Opciones de configuración
+**On macOS:**
+```
+/Users/yourusername/Library/Application Support/TeleprompterPro/config.json
+```
+
+### 7. Configuration options
 
 ```json
 {
@@ -170,46 +170,46 @@ C:\Users\TuUsuario\AppData\Roaming\TeleprompterPro\config.json
 }
 ```
 
-| Opción | Tipo | Default | Descripción |
+| Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `font_size` | int | 42 | Tamaño de la letra |
-| `font_family` | string | "Helvetica" | Fuente utilizada |
-| `text_color` | string | "#FFD700" | Color del texto (dorado) |
-| `bg_color` | string | "black" | Color de fondo |
-| `scroll_speed` | int | 3 | Velocidad del scroll (se recuerda al cerrar) |
-| `margin_x` | int | 200 | Margen lateral en píxeles |
-| `margin_y` | int | 50 | Margen vertical en píxeles |
-| `mirror_mode` | bool | false | Invertir texto horizontalmente |
-| `fullscreen` | bool | true | Abrir en pantalla completa |
-| `wpm` | int | 150 | WPM objetivo para sincronización de voz |
+| `font_size` | int | 42 | Font size |
+| `font_family` | string | "Helvetica" | Font family |
+| `text_color` | string | "#FFD700" | Text color (gold) |
+| `bg_color` | string | "black" | Background color |
+| `scroll_speed` | int | 3 | Scroll speed (remembered on close) |
+| `margin_x` | int | 200 | Horizontal margin in pixels |
+| `margin_y` | int | 50 | Vertical margin in pixels |
+| `mirror_mode` | bool | false | Mirror text horizontally |
+| `fullscreen` | bool | true | Open in fullscreen |
+| `wpm` | int | 150 | Target WPM for voice sync |
 
 ---
 
-## 🎨 Personalización rápida
+## 🎨 Quick Customization
 
-### Cambiar colores
+### Change colors
 
-**Modo clásico (dorado sobre negro):**
+**Classic mode (gold on black):**
 ```json
 "text_color": "#FFD700",
 "bg_color": "black"
 ```
 
-**Alto contraste (blanco sobre negro):**
+**High contrast (white on black):**
 ```json
 "text_color": "#FFFFFF",
 "bg_color": "black"
 ```
 
-**Verde sobre negro (estilo terminal):**
+**Green on black (terminal style):**
 ```json
 "text_color": "#00FF00",
 "bg_color": "black"
 ```
 
-### Modo espejo
+### Mirror mode
 
-Si montas un vidrio reflectante frente a la cámara del teléfono:
+If you mount a reflective glass in front of the phone camera:
 
 ```json
 "mirror_mode": true
@@ -217,27 +217,27 @@ Si montas un vidrio reflectante frente a la cámara del teléfono:
 
 ---
 
-## 📁 Estructura del proyecto
+## 📁 Project Structure
 
 ```
 teleprompter/
-├── main.py              # Punto de entrada
-├── ui.py                # Clase Teleprompter (interfaz PyQt6)
-├── config.py            # Configuración multiplataforma
-├── remote_server.py     # Servidor Flask para control remoto
-├── speech_sync.py       # Sincronización de voz con Vosk
-├── build.sh             # Script de empaquetado
-├── TeleprompterPro.spec # Configuración PyInstaller
+├── main.py              # Entry point
+├── ui.py                # Teleprompter class (PyQt6 UI)
+├── config.py            # Cross-platform configuration
+├── remote_server.py     # Flask server for remote control
+├── speech_sync.py       # Voice sync with Vosk
+├── build.sh             # Build script
+├── TeleprompterPro.spec # PyInstaller config
 ├── templates/
-│   └── remote.html      # Página de control remoto
+│   └── remote.html      # Remote control page
 ├── tests/
 │   ├── test_config.py
 │   ├── test_speech_sync.py
 │   └── test_edge_cases.py
 ├── scripts/
-│   ├── guion_actual.txt
-│   └── guion_largo_ejemplo.txt
-├── model-es/            # Modelo de Vosk (descargado)
+│   ├── current_script.txt
+│   └── long_script_example.txt
+├── model-es/            # Vosk model (downloaded)
 ├── requirements.txt
 ├── .gitignore
 ├── ROADMAP.md
@@ -246,42 +246,42 @@ teleprompter/
 
 ---
 
-## ❓ Preguntas frecuentes
+## ❓ Frequently Asked Questions
 
-**¿Puedo usar un guion en otro idioma?**
-Sí. El teleprompter soporta UTF-8 completo: tildes, ñ, emojis, y cualquier idioma.
+**Can I use a script in another language?**
+Yes. The teleprompter fully supports UTF-8: accents, ñ, emojis, and any language.
 
-**¿Dónde se guarda mi configuración?**
-Depende de tu sistema operativo. Ver la sección "Configuración multiplataforma" arriba.
+**Where is my configuration saved?**
+It depends on your operating system. See the "Cross-platform configuration" section above.
 
-**¿Recuerda mi última velocidad?**
-Sí. La velocidad se guarda automáticamente al cerrar la app y se restaura al iniciar.
+**Does it remember my last speed?**
+Yes. Speed is automatically saved when you close the app and restored on startup.
 
-**¿Funciona en Wayland?**
-Sí. PyQt6 tiene mejor soporte que tkinter. Si tienes problemas, presiona `F` para alternar a modo ventana.
+**Does it work on Wayland?**
+Yes. PyQt6 has better support than tkinter. If you have issues, press `F` to toggle windowed mode.
 
-**¿Cómo funciona el control remoto?**
-El teleprompter levanta un servidor local (Flask) en el puerto 5000. Al escanear el QR, se abre una página web que se comunica por WebSocket. Todo es local, no requiere internet.
+**How does remote control work?**
+The teleprompter runs a local Flask server on port 5000. Scanning the QR opens a web page that communicates via WebSocket. Everything is local, no internet required.
 
-**¿Cómo funciona la sincronización por voz?**
-Usa Vosk (reconocimiento de voz local) para escuchar tu voz y compararla contra el guion. Ajusta automáticamente la velocidad del scroll según tu ritmo de habla. No requiere internet.
+**How does voice synchronization work?**
+It uses Vosk (local speech recognition) to listen to your voice and compare it against the script. It automatically adjusts scroll speed based on your speaking pace. No internet required.
 
 ---
 
 ## 🗺️ Roadmap
 
-Ver [ROADMAP.md](ROADMAP.md) para las mejoras planificadas.
+See [ROADMAP.md](ROADMAP.md) for planned improvements.
 
-**Todas las fases completadas:**
-- ✅ Fase 0: Refactor base y modularización
-- ✅ Fase 1: Cuenta regresiva, progreso, selector de guion, línea guía
-- ✅ Fase 2: Control remoto desde el teléfono con Flask y QR
-- ✅ Fase 3: Sincronización inteligente con la voz (Vosk)
-- ✅ Fase 4: Empaquetado con PyInstaller
-- ✅ Fase 5: Pulido y 27 tests unitarios
+**All phases completed:**
+- ✅ Phase 0: Base refactor and modularization
+- ✅ Phase 1: Countdown, progress, script selector, guide line
+- ✅ Phase 2: Phone remote control with Flask and QR
+- ✅ Phase 3: Intelligent voice synchronization (Vosk)
+- ✅ Phase 4: Packaging with PyInstaller
+- ✅ Phase 5: Polish and 27 unit tests
 
 ---
 
-## 📄 Licencia
+## 📄 License
 
 MIT
