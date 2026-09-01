@@ -16,6 +16,7 @@
 | Phase 3 — Voice Sync | ✅ Completed | 2026-08-30 |
 | Phase 4 — Packaging | ✅ Completed | 2026-08-30 |
 | Phase 5 — Polish & Tests | ✅ Completed | 2026-08-30 |
+| Phase 6 — Post-launch Features | ✅ Completed | 2026-09-01 |
 
 ---
 
@@ -90,6 +91,16 @@
 
 ---
 
+## Phase 6 — Post-launch Features ✅
+
+- [x] **Smooth scroll** — Fractional pixel accumulator for linear acceleration
+- [x] **Position bookmarks** — Save/jump to 5 positions (Ctrl+1-5, 1-5)
+- [x] **Scroll position memory** — Restore position on reopen
+- [x] **WPM target control** — Adjust target WPM with `[` and `]`
+- [x] **Real-time WPM indicator** — Show actual WPM from scroll speed
+
+---
+
 ## Project Structure
 
 ```
@@ -135,6 +146,9 @@ teleprompter/
 | `G` | Show/hide guide line |
 | `Q` | Show QR code |
 | `V` | Toggle voice sync |
+| `Ctrl + 1-5` | Save bookmark |
+| `1` to `5` | Jump to bookmark |
+| `[` / `]` | WPM target ±10 |
 | `Escape` | Exit (saves config) |
 
 ---
@@ -156,3 +170,8 @@ teleprompter/
 | PyInstaller packaging | ✅ |
 | 27 unit tests | ✅ |
 | Complete documentation | ✅ |
+| Smooth scroll (fractional) | ✅ |
+| Position bookmarks (5 slots) | ✅ |
+| Scroll position memory | ✅ |
+| WPM target control | ✅ |
+| Real-time WPM indicator | ✅ |

@@ -93,6 +93,9 @@ python3 main.py scripts/mission_speech.txt
 | `G` | 📏 | Show/hide guide line |
 | `Q` | 📱 | Show QR code for remote control |
 | `V` | 🎤 | Toggle voice synchronization |
+| `Ctrl + 1-5` | 🔖 | Save bookmark at current position |
+| `1` to `5` | 🔖 | Jump to saved bookmark |
+| `[` / `]` | 🎯 | WPM target -10 / +10 |
 | `Escape` | ❌ | Close app (saves configuration) |
 
 ### 4. Phone remote control 📱
@@ -166,7 +169,9 @@ C:\Users\YourUsername\AppData\Roaming\TeleprompterPro\config.json
   "margin_y": 50,
   "mirror_mode": false,
   "fullscreen": true,
-  "wpm": 150
+  "wpm": 150,
+  "bookmarks": {},
+  "last_scroll_position": 0
 }
 ```
 
@@ -182,6 +187,38 @@ C:\Users\YourUsername\AppData\Roaming\TeleprompterPro\config.json
 | `mirror_mode` | bool | false | Mirror text horizontally |
 | `fullscreen` | bool | true | Open in fullscreen |
 | `wpm` | int | 150 | Target WPM for voice sync |
+| `bookmarks` | object | {} | Saved scroll positions (1-5) |
+| `last_scroll_position` | int | 0 | Last scroll position (pixels) |
+
+### 8. Position bookmarks 🔖
+
+Save up to 5 scroll positions and jump between them instantly.
+
+**How to use:**
+1. Navigate to the position you want to save
+2. Press `Ctrl + 1` to `Ctrl + 5` to save it
+3. Press `1` to `5` to jump back to that position
+
+**Visual indicators:**
+- 🔵 Gold number on dark background = bookmark saved
+- ⚪ Gray number on black background = empty slot
+
+Bookmarks are saved in `config.json` and cleared when you load a new script.
+
+### 9. WPM control and real-time indicator 🎯
+
+| Key | Action |
+|-----|--------|
+| `[` | WPM target -10 (minimum 50) |
+| `]` | WPM target +10 |
+
+The toolbar shows:
+- **WPM objetivo** — your target words per minute (configurable with `[`/`]`)
+- **WPM real** — actual words per minute calculated from scroll speed (green)
+
+### 10. Scroll position memory 💾
+
+The app remembers where you were when you close it. When you open it again, it restores your scroll position automatically. If you change scripts, the position resets.
 
 ---
 
@@ -254,8 +291,8 @@ Yes. The teleprompter fully supports UTF-8: accents, ñ, emojis, and any languag
 **Where is my configuration saved?**
 It depends on your operating system. See the "Cross-platform configuration" section above.
 
-**Does it remember my last speed?**
-Yes. Speed is automatically saved when you close the app and restored on startup.
+**Does it remember my last speed and position?**
+Yes. Speed and scroll position are automatically saved when you close the app and restored on startup.
 
 **Does it work on Wayland?**
 Yes. PyQt6 has better support than tkinter. If you have issues, press `F` to toggle windowed mode.
@@ -279,6 +316,7 @@ See [ROADMAP.md](ROADMAP.md) for planned improvements.
 - ✅ Phase 3: Intelligent voice synchronization (Vosk)
 - ✅ Phase 4: Packaging with PyInstaller
 - ✅ Phase 5: Polish and 27 unit tests
+- ✅ Phase 6: Smooth scroll, bookmarks, WPM control, position memory
 
 ---
 
