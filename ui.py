@@ -184,7 +184,7 @@ class Teleprompter(QMainWindow):
         self.words_label.setStyleSheet("color: #888; font-size: 14px; background: transparent;")
         bottom_layout.addWidget(self.words_label)
 
-        main_layout.addWidget(self.bottom_panel)
+        bottom_layout.addWidget(self._separator())
 
         # ── Variables de control ───────────────────────────────
         self.scroll_speed = config["scroll_speed"]
@@ -193,6 +193,22 @@ class Teleprompter(QMainWindow):
         self.countdown_active = False
         self.scroll_position = 0  # Posición en píxeles
         self._subpixel_accumulator = 0.0  # Para scroll suave (píxeles fraccionales)
+        self.bookmarks = dict(config.get("bookmarks", {}))  # {"1": 0, "2": 1500, ...}
+
+        # Indicadores de bookmarks (después de inicializar self.bookmarks)
+        self.bookmark_labels = {}
+        for i in range(1, 6):
+            lbl = QLabel(f"{i}")
+            lbl.setFixedSize(24, 24)
+            lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            if str(i) in self.bookmarks:
+                lbl.setStyleSheet("color: #FFD700; font-size: 14px; font-weight: bold; background: #333; border-radius: 4px;")
+            else:
+                lbl.setStyleSheet("color: #555; font-size: 14px; background: #222; border-radius: 4px;")
+            self.bookmark_labels[i] = lbl
+            bottom_layout.addWidget(lbl)
+
+        main_layout.addWidget(self.bottom_panel)
 
         # Timer para el scroll
         self.scroll_timer = QTimer()
@@ -339,6 +355,9 @@ class Teleprompter(QMainWindow):
             self.total_words = len(text.split())
             self.script_path = path
             self.script_label.setText("📄 " + os.path.basename(path))
+            self.bookmarks.clear()
+            for i in range(1, 6):
+                self.bookmark_labels[i].setStyleSheet("color: #555; font-size: 14px; background: #222; border-radius: 4px;")
             self.reset()
             self.words_label.setText(f"📝 0 / {self.total_words}")
         except Exception as e:
@@ -350,6 +369,30 @@ class Teleprompter(QMainWindow):
             self.guide_line.hide()
         else:
             self.guide_line.show()
+
+    # ── Bookmarks ─────────────────────────────────────────────
+
+    def set_bookmark(self, slot):
+        """Guarda la posición actual en el bookmark indicado (1-5)."""
+        scrollbar = self.text_widget.verticalScrollBar()
+        self.bookmarks[str(slot)] = scrollbar.value()
+        # Actualizar indicador visual
+        lbl = self.bookmark_labels[slot]
+        lbl.setStyleSheet("color: #FFD700; font-size: 14px; font-weight: bold; background: #333; border-radius: 4px;")
+        self.status_label.setText(f"🔖 Bookmark {slot} guardado")
+        self.status_label.setStyleSheet("color: #FFD700; font-size: 16px; font-weight: bold; background: transparent;")
+
+    def jump_to_bookmark(self, slot):
+        """Salta a la posición guardada en el bookmark indicado (1-5)."""
+        key = str(slot)
+        if key in self.bookmarks:
+            scrollbar = self.text_widget.verticalScrollBar()
+            scrollbar.setValue(self.bookmarks[key])
+            self.status_label.setText(f"🔖 Saltando a bookmark {slot}")
+            self.status_label.setStyleSheet("color: #44FF44; font-size: 16px; font-weight: bold; background: transparent;")
+        else:
+            self.status_label.setText(f"🔖 Bookmark {slot} no definido (Ctrl+{slot} para guardar)")
+            self.status_label.setStyleSheet("color: #FF8800; font-size: 16px; font-weight: bold; background: transparent;")
 
     def toggle_speech_sync(self):
         """Activar/desactivar sincronización de voz."""
@@ -554,6 +597,7 @@ class Teleprompter(QMainWindow):
         self.config["font_size"] = self.font_size
         self.config["mirror_mode"] = self.is_mirror
         self.config["wpm"] = self.wpm
+        self.config["bookmarks"] = self.bookmarks
         save_config(self.config)
 
     # ── Eventos de teclado ─────────────────────────────────────
@@ -607,6 +651,13 @@ class Teleprompter(QMainWindow):
             self.toggle_speech_sync()
         elif key == Qt.Key.Key_Escape:
             self.close()
+        # Bookmarks: Ctrl+1-5 = guardar, 1-5 = saltar
+        elif key in (Qt.Key.Key_1, Qt.Key.Key_2, Qt.Key.Key_3, Qt.Key.Key_4, Qt.Key.Key_5):
+            slot = key - Qt.Key.Key_0
+            if modifiers == Qt.KeyboardModifier.ControlModifier:
+                self.set_bookmark(slot)
+            else:
+                self.jump_to_bookmark(slot)
         else:
             super().keyPressEvent(event)
 

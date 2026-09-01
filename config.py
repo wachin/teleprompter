@@ -48,6 +48,7 @@ DEFAULTS = {
     "mirror_mode": False,
     "fullscreen": True,
     "script_dir": "scripts",
+    "bookmarks": {},  # {"1": 0, "2": 1500, ...} posiciones en píxeles
 }
 
 
