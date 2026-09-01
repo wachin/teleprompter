@@ -69,11 +69,16 @@ class Teleprompter(QMainWindow):
 
         # Palabras por minuto configurables
         self.wpm = config.get("wpm", 150)
-        self.wpm_label = QLabel(f"WPM: {self.wpm}")
+        self.wpm_label = QLabel(f"WPM objetivo: {self.wpm}")
         self.wpm_label.setStyleSheet("color: #888; font-size: 14px; background: transparent;")
         toolbar_layout.addWidget(self.wpm_label)
 
         toolbar_layout.addWidget(self._separator())
+
+        # WPM real (calculado en tiempo real)
+        self.wpm_real_label = QLabel("WPM real: 0")
+        self.wpm_real_label.setStyleSheet("color: #44FF44; font-size: 14px; font-weight: bold; background: transparent;")
+        toolbar_layout.addWidget(self.wpm_real_label)
 
         # Indicador de sincronización de voz
         self.voice_sync_label = QLabel("🎤 V: Off")
@@ -194,6 +199,7 @@ class Teleprompter(QMainWindow):
         self.scroll_position = 0  # Posición en píxeles
         self._subpixel_accumulator = 0.0  # Para scroll suave (píxeles fraccionales)
         self.bookmarks = dict(config.get("bookmarks", {}))  # {"1": 0, "2": 1500, ...}
+        self.last_scroll_position = config.get("last_scroll_position", 0)
 
         # Indicadores de bookmarks (después de inicializar self.bookmarks)
         self.bookmark_labels = {}
@@ -223,6 +229,10 @@ class Teleprompter(QMainWindow):
         self.progress_timer = QTimer()
         self.progress_timer.timeout.connect(self._update_progress)
         self.progress_timer.start(100)  # Actualizar cada 100ms
+
+        # Restaurar posición del scroll (después de que la ventana renderice)
+        if self.last_scroll_position > 0:
+            QTimer.singleShot(300, self._restore_scroll_position)
 
         # Aplicar espejo si está activado
         if self.is_mirror:
@@ -475,7 +485,7 @@ class Teleprompter(QMainWindow):
             words_scrolled = int(self.total_words * (scrollbar.value() / max_scroll))
             self.words_label.setText(f"📝 {words_scrolled} / {self.total_words}")
 
-            # Tiempo restante estimado
+            # Tiempo restante estimado y WPM real
             if self.is_running and self.scroll_speed > 0:
                 remaining_scroll = max_scroll - scrollbar.value()
                 # Pixels per second = speed * (1000 / interval_ms) / 5.0
@@ -485,7 +495,15 @@ class Teleprompter(QMainWindow):
                 minutes = int(seconds_remaining // 60)
                 seconds = int(seconds_remaining % 60)
                 self.time_label.setText(f"⏱ {minutes:02d}:{seconds:02d}")
-            elif max_scroll > 0:
+
+                # WPM real: palabras cubiertas por segundo * 60
+                words_per_pixel = self.total_words / max_scroll if max_scroll > 0 else 0
+                wpm_real = pixels_per_second * 60 * words_per_pixel
+                self.wpm_real_label.setText(f"WPM real: {wpm_real:.0f}")
+            else:
+                self.wpm_real_label.setText("WPM real: 0")
+
+            if not self.is_running:
                 # Estimar duración total basada en WPM
                 total_seconds = (self.total_words / self.wpm) * 60
                 minutes = int(total_seconds // 60)
@@ -591,6 +609,12 @@ class Teleprompter(QMainWindow):
         """Invierte el texto horizontalmente (modo espejo)."""
         self.text_widget.setLayoutDirection(Qt.LayoutDirection.RightToLeft)
 
+    def _restore_scroll_position(self):
+        """Restaura la posición del scroll guardada."""
+        scrollbar = self.text_widget.verticalScrollBar()
+        if self.last_scroll_position > 0 and scrollbar.maximum() > 0:
+            scrollbar.setValue(min(self.last_scroll_position, scrollbar.maximum()))
+
     def _save_current_config(self):
         """Guarda la configuración actual para la próxima vez."""
         self.config["scroll_speed"] = self.scroll_speed
@@ -598,6 +622,7 @@ class Teleprompter(QMainWindow):
         self.config["mirror_mode"] = self.is_mirror
         self.config["wpm"] = self.wpm
         self.config["bookmarks"] = self.bookmarks
+        self.config["last_scroll_position"] = self.text_widget.verticalScrollBar().value()
         save_config(self.config)
 
     # ── Eventos de teclado ─────────────────────────────────────
@@ -639,6 +664,13 @@ class Teleprompter(QMainWindow):
             self.font_bigger()
         elif key == Qt.Key.Key_Minus:
             self.font_smaller()
+        # WPM objetivo: [ y ]
+        elif key == Qt.Key.Key_BracketLeft:
+            self.wpm = max(50, self.wpm - 10)
+            self.wpm_label.setText(f"WPM objetivo: {self.wpm}")
+        elif key == Qt.Key.Key_BracketRight:
+            self.wpm += 10
+            self.wpm_label.setText(f"WPM objetivo: {self.wpm}")
         elif key == Qt.Key.Key_F:
             self.toggle_fullscreen()
         elif key == Qt.Key.Key_O:

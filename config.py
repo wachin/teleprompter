@@ -49,6 +49,7 @@ DEFAULTS = {
     "fullscreen": True,
     "script_dir": "scripts",
     "bookmarks": {},  # {"1": 0, "2": 1500, ...} posiciones en píxeles
+    "last_scroll_position": 0,  # Posición del scroll al cerrar
 }
 
 
