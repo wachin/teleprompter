@@ -192,6 +192,7 @@ class Teleprompter(QMainWindow):
         self.is_mirror = config["mirror_mode"]
         self.countdown_active = False
         self.scroll_position = 0  # Posición en píxeles
+        self._subpixel_accumulator = 0.0  # Para scroll suave (píxeles fraccionales)
 
         # Timer para el scroll
         self.scroll_timer = QTimer()
@@ -248,6 +249,7 @@ class Teleprompter(QMainWindow):
             self.status_label.setText("▶ Reproduciendo")
             self.status_label.setStyleSheet("color: #44FF44; font-size: 16px; font-weight: bold; background: transparent;")
             self.is_running = True
+            self._subpixel_accumulator = 0.0
             self._update_timer_interval()
             self.scroll_timer.start()
 
@@ -267,6 +269,7 @@ class Teleprompter(QMainWindow):
             # Pausar
             self.is_running = False
             self.scroll_timer.stop()
+            self._subpixel_accumulator = 0.0
             self.status_label.setText("⏸ Pausado")
             self.status_label.setStyleSheet("color: #FFFFFF; font-size: 16px; font-weight: bold; background: transparent;")
         else:
@@ -292,6 +295,7 @@ class Teleprompter(QMainWindow):
         self.countdown_active = False
         self.scroll_timer.stop()
         self.countdown_timer.stop()
+        self._subpixel_accumulator = 0.0
         self.text_widget.verticalScrollBar().setValue(0)
         self.status_label.setText("⏸ Pausado")
         self.status_label.setStyleSheet("color: #FFFFFF; font-size: 16px; font-weight: bold; background: transparent;")
@@ -402,13 +406,18 @@ class Teleprompter(QMainWindow):
         """Un paso de scroll automático."""
         if self.is_running:
             scrollbar = self.text_widget.verticalScrollBar()
-            step = max(1, self.scroll_speed // 2)
-            scrollbar.setValue(scrollbar.value() + step)
+            # Scroll suave con acumulador fraccionario:
+            # Velocidad 1 = 20 px/s, Velocidad 10 = 200 px/s, etc.
+            # Cada paso del timer (10ms), avanza speed/5.0 píxeles (puede ser fraccional)
+            self._subpixel_accumulator += self.scroll_speed / 5.0
+            pixels = int(self._subpixel_accumulator)
+            if pixels > 0:
+                scrollbar.setValue(scrollbar.value() + pixels)
+                self._subpixel_accumulator -= pixels
 
     def _update_timer_interval(self):
-        """Actualiza el intervalo del timer según la velocidad."""
-        interval = max(5, int(50 / self.scroll_speed))
-        self.scroll_timer.setInterval(interval)
+        """Actualiza el intervalo del timer (fijo a 10ms, la velocidad la controla el acumulador)."""
+        self.scroll_timer.setInterval(10)
 
     def _update_progress(self):
         """Actualiza la barra de progreso y el tiempo restante."""
@@ -426,10 +435,10 @@ class Teleprompter(QMainWindow):
             # Tiempo restante estimado
             if self.is_running and self.scroll_speed > 0:
                 remaining_scroll = max_scroll - scrollbar.value()
-                pixels_per_step = max(1, self.scroll_speed // 2)
-                interval_ms = max(5, int(50 / self.scroll_speed))
-                steps_remaining = remaining_scroll / pixels_per_step
-                seconds_remaining = (steps_remaining * interval_ms) / 1000
+                # Pixels per second = speed * (1000 / interval_ms) / 5.0
+                # Con interval=10ms: pps = speed * 20
+                pixels_per_second = self.scroll_speed * 20.0
+                seconds_remaining = remaining_scroll / pixels_per_second
                 minutes = int(seconds_remaining // 60)
                 seconds = int(seconds_remaining % 60)
                 self.time_label.setText(f"⏱ {minutes:02d}:{seconds:02d}")

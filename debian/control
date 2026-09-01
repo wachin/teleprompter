@@ -1,7 +1,7 @@
 Source: teleprompter-pro
 Section: x11
 Priority: optional
-Maintainer: Juan Salazar Flores <wachin@debian.org>
+Maintainer: Washington Indacochea Delgado <linuxfrontier@proton.me>
 Build-Depends: debhelper-compat (= 13),
                dh-python,
                python3-all,
