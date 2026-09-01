@@ -80,6 +80,14 @@ class Teleprompter(QMainWindow):
         self.wpm_real_label.setStyleSheet("color: #44FF44; font-size: 14px; font-weight: bold; background: transparent;")
         toolbar_layout.addWidget(self.wpm_real_label)
 
+        toolbar_layout.addWidget(self._separator())
+
+        # Aceleración de scroll (px/s por unidad de velocidad)
+        self.scroll_acceleration = config.get("scroll_acceleration", 20)
+        self.accel_label = QLabel(f"Acel: {self.scroll_acceleration}")
+        self.accel_label.setStyleSheet("color: #FF8800; font-size: 14px; background: transparent;")
+        toolbar_layout.addWidget(self.accel_label)
+
         # Indicador de sincronización de voz
         self.voice_sync_label = QLabel("🎤 V: Off")
         self.voice_sync_label.setStyleSheet("color: #888; font-size: 14px; background: transparent;")
@@ -488,9 +496,8 @@ class Teleprompter(QMainWindow):
             # Tiempo restante estimado y WPM real
             if self.is_running and self.scroll_speed > 0:
                 remaining_scroll = max_scroll - scrollbar.value()
-                # Pixels per second = speed * (1000 / interval_ms) / 5.0
-                # Con interval=10ms: pps = speed * 20
-                pixels_per_second = self.scroll_speed * 20.0
+                # Pixels per second = speed * acceleration
+                pixels_per_second = self.scroll_speed * self.scroll_acceleration
                 seconds_remaining = remaining_scroll / pixels_per_second
                 minutes = int(seconds_remaining // 60)
                 seconds = int(seconds_remaining % 60)
@@ -621,6 +628,7 @@ class Teleprompter(QMainWindow):
         self.config["font_size"] = self.font_size
         self.config["mirror_mode"] = self.is_mirror
         self.config["wpm"] = self.wpm
+        self.config["scroll_acceleration"] = self.scroll_acceleration
         self.config["bookmarks"] = self.bookmarks
         self.config["last_scroll_position"] = self.text_widget.verticalScrollBar().value()
         save_config(self.config)
@@ -664,6 +672,13 @@ class Teleprompter(QMainWindow):
             self.font_bigger()
         elif key == Qt.Key.Key_Minus:
             self.font_smaller()
+        # Aceleración: Ctrl+[ y Ctrl+]
+        elif key == Qt.Key.Key_BracketLeft and modifiers == Qt.KeyboardModifier.ControlModifier:
+            self.scroll_acceleration = max(5, self.scroll_acceleration - 5)
+            self.accel_label.setText(f"Acel: {self.scroll_acceleration}")
+        elif key == Qt.Key.Key_BracketRight and modifiers == Qt.KeyboardModifier.ControlModifier:
+            self.scroll_acceleration += 5
+            self.accel_label.setText(f"Acel: {self.scroll_acceleration}")
         # WPM objetivo: [ y ]
         elif key == Qt.Key.Key_BracketLeft:
             self.wpm = max(50, self.wpm - 10)

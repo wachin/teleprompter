@@ -98,6 +98,7 @@
 - [x] **Scroll position memory** — Restore position on reopen
 - [x] **WPM target control** — Adjust target WPM with `[` and `]`
 - [x] **Real-time WPM indicator** — Show actual WPM from scroll speed
+- [x] **Scroll acceleration control** — Adjustable px/s per speed unit with `Ctrl+[`/`]`
 
 ---
 
@@ -149,6 +150,7 @@ teleprompter/
 | `Ctrl + 1-5` | Save bookmark |
 | `1` to `5` | Jump to bookmark |
 | `[` / `]` | WPM target ±10 |
+| `Ctrl + [` / `Ctrl + ]` | Acceleration ±5 |
 | `Escape` | Exit (saves config) |
 
 ---
@@ -175,3 +177,4 @@ teleprompter/
 | Scroll position memory | ✅ |
 | WPM target control | ✅ |
 | Real-time WPM indicator | ✅ |
+| Scroll acceleration control | ✅ |

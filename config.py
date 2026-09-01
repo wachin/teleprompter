@@ -45,6 +45,7 @@ DEFAULTS = {
     "margin_x": 200,
     "margin_y": 50,
     "wpm": 150,
+    "scroll_acceleration": 20,  # px/s por unidad de velocidad
     "mirror_mode": False,
     "fullscreen": True,
     "script_dir": "scripts",

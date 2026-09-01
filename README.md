@@ -96,6 +96,7 @@ python3 main.py scripts/mission_speech.txt
 | `Ctrl + 1-5` | 🔖 | Save bookmark at current position |
 | `1` to `5` | 🔖 | Jump to saved bookmark |
 | `[` / `]` | 🎯 | WPM target -10 / +10 |
+| `Ctrl + [` / `Ctrl + ]` | ⚡ | Scroll acceleration -5 / +5 |
 | `Escape` | ❌ | Close app (saves configuration) |
 
 ### 4. Phone remote control 📱
@@ -187,6 +188,7 @@ C:\Users\YourUsername\AppData\Roaming\TeleprompterPro\config.json
 | `mirror_mode` | bool | false | Mirror text horizontally |
 | `fullscreen` | bool | true | Open in fullscreen |
 | `wpm` | int | 150 | Target WPM for voice sync |
+| `scroll_acceleration` | int | 20 | Pixels/sec per speed unit |
 | `bookmarks` | object | {} | Saved scroll positions (1-5) |
 | `last_scroll_position` | int | 0 | Last scroll position (pixels) |
 
@@ -215,6 +217,7 @@ Bookmarks are saved in `config.json` and cleared when you load a new script.
 The toolbar shows:
 - **WPM objetivo** — your target words per minute (configurable with `[`/`]`)
 - **WPM real** — actual words per minute calculated from scroll speed (green)
+- **Acel** — scroll acceleration: pixels per second per speed unit (orange, configurable with `Ctrl+[`/`]`)
 
 ### 10. Scroll position memory 💾
 
